@@ -13,8 +13,10 @@ pulls](https://img.shields.io/github/issues-pr/HediaTnani/qsvaRPkgDemo)](https:/
 
 The goal of `qsvaRPkgDemo` is to provide a step-by-step explanation of
 the qsvaR package for entry-level users and apply it to BrainSeq Phase 2
-dataset. We will describe how using qsvaR can improve the
-reproducibility of DE analyses across datasets.
+dataset. We’ll also show how qsvaR adjust for the effect of degradation
+in RNAseq postmortem human brain datasets. Using qsvaR can improve
+significantly the reproducibility of differential expression analyses
+across datasets.
 
 ## Installation instructions
 
