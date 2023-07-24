@@ -72,7 +72,9 @@ devtools::build_readme()
 
 ## Add a vignette template
 pkg <- basename(usethis::proj_get())
-biocthis::use_bioc_vignette(pkg, paste("Introduction to", pkg))
+# biocthis::use_bioc_vignette(pkg, paste("Introduction to", pkg))
+biocthis::use_bioc_vignette(pkg, "Differential Expression Analysis using Limma and qsvaR")
+
 
 ## Add a Bioconductor-friendly GitHub actions workflow to check your package
 biocthis::use_bioc_github_action()
