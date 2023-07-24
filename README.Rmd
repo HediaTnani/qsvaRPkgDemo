@@ -18,19 +18,9 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![GitHub issues](https://img.shields.io/github/issues/HediaTnani/qsvaRPkgDemo)](https://github.com/HediaTnani/qsvaRPkgDemo/issues)
 [![GitHub pulls](https://img.shields.io/github/issues-pr/HediaTnani/qsvaRPkgDemo)](https://github.com/HediaTnani/qsvaRPkgDemo/pulls)
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Bioc release status](http://www.bioconductor.org/shields/build/release/bioc/qsvaRPkgDemo.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/qsvaRPkgDemo)
-[![Bioc devel status](http://www.bioconductor.org/shields/build/devel/bioc/qsvaRPkgDemo.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/qsvaRPkgDemo)
-[![Bioc downloads rank](https://bioconductor.org/shields/downloads/release/qsvaRPkgDemo.svg)](http://bioconductor.org/packages/stats/bioc/qsvaRPkgDemo/)
-[![Bioc support](https://bioconductor.org/shields/posts/qsvaRPkgDemo.svg)](https://support.bioconductor.org/tag/qsvaRPkgDemo)
-[![Bioc history](https://bioconductor.org/shields/years-in-bioc/qsvaRPkgDemo.svg)](https://bioconductor.org/packages/release/bioc/html/qsvaRPkgDemo.html#since)
-[![Bioc last commit](https://bioconductor.org/shields/lastcommit/devel/bioc/qsvaRPkgDemo.svg)](http://bioconductor.org/checkResults/devel/bioc-LATEST/qsvaRPkgDemo/)
-[![Bioc dependencies](https://bioconductor.org/shields/dependencies/release/qsvaRPkgDemo.svg)](https://bioconductor.org/packages/release/bioc/html/qsvaRPkgDemo.html#since)
-[![check-bioc](https://github.com/HediaTnani/qsvaRPkgDemo/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/HediaTnani/qsvaRPkgDemo/actions/workflows/check-bioc.yml)
-[![Codecov test coverage](https://codecov.io/gh/HediaTnani/qsvaRPkgDemo/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/HediaTnani/qsvaRPkgDemo?branch=devel)
 <!-- badges: end -->
 
-The goal of `qsvaRPkgDemo` is to ...
+The goal of `qsvaRPkgDemo` is to provide a step-by-step explanation of the qsvaR package for entry-level users and apply it to BrainSeq Phase 2 dataset. We will describe how using qsvaR can improve the reproducibility of DE analyses across datasets.
 
 ## Installation instructions
 
@@ -49,30 +39,7 @@ And the development version from [GitHub](https://github.com/HediaTnani/qsvaRPkg
 ```{r 'install_dev', eval = FALSE}
 BiocManager::install("HediaTnani/qsvaRPkgDemo")
 ```
-## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example, eval = requireNamespace('qsvaRPkgDemo')}
-library("qsvaRPkgDemo")
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
 
 ## Citation
 
