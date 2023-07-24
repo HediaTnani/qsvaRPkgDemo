@@ -20,8 +20,10 @@ output:
     self_contained: yes
     toc: true
     toc_float: true
-    toc_depth: 2
+    toc_depth: 4
     code_folding: show
+    execute:
+         eval: false
 date: "`r doc_date()`"
 package: "`r pkg_ver('qsvaRPkgDemo')`"
 vignette: >
@@ -58,6 +60,14 @@ bib <- c(
     qsvaRPkgDemo = citation("qsvaRPkgDemo")[1]
 )
 ```
+
+# Introduction
+
+Postmortem brain tissue is a valuable resource for studying the human brain and understanding various neurological and psychiatric disorders. However, the quality of postmortem brain tissue can be significantly affected by degradation, which can occur due to various factors such as the time elapsed since death (postmortem interval), the conditions in which the body was stored, and the method of tissue preservation.
+
+Therefore, it's crucial to remove or at least minimize the effect of degradation in postmortem brain tissue to ensure the accuracy and reliability of research findings. This can be achieved through various methods, such as optimizing the conditions for tissue storage and preservation, using appropriate controls, and using statistical methods to correct for the effects of degradation.
+
+This is a basic example which shows how to obtain the quality surrogate variables (qSVs) for BrainSeq Phase 2.
 
 # Basics
 
