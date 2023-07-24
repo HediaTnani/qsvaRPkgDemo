@@ -1,0 +1,19 @@
+pkgVer <- function(pkg) {
+    if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
+    ver <- meta$Version
+    paste0('https://github.com/HediaTnani/qsvaRPkgDemo/', pkg, ' - R package version ', ver)
+}
+
+c(
+
+    bibentry(bibtype="manual",
+        title = "Differential Expression Analysis using Limma and qsvaR",
+        author = personList(
+            as.person("HediaTnani")
+        ),
+        year = format(Sys.Date(), "%Y"),
+        url = "http://www.bioconductor.org/packages/qsvaRPkgDemo",
+        note = pkgVer('qsvaRPkgDemo'),
+        doi = '10.18129/B9.bioc.qsvaRPkgDemo'
+    )
+)
