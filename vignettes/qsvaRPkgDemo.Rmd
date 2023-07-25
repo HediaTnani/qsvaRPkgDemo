@@ -19,7 +19,7 @@ output:
     toc: true
     toc_float: true
     toc_depth: 5
-    code_folding: show
+    code_folding: hide
 date: "`r doc_date()`"
 package: "`r pkg_ver('qsvaRPkgDemo')`"
 vignette: >
@@ -55,37 +55,29 @@ bib <- c(
     testthat = citation("testthat")[1],
     qsvaRPkgDemo = citation("qsvaRPkgDemo")[1],
     SummarizedExperiment = citation("SummarizedExperiment")[1],
-    variancePartition = citation("variancePartition")[1],
-    voom = RefManageR::BibEntry(
-        "article",
-        key = "voom",
-        author = "CW Law and Y Chen and W Shi and GK Smyth",
-        year = "2014",
-        title = "Voom: precision weights unlock linear model analysis tools for RNA-seq read counts",
-        journal = "Genome Biology",
-        volume = "15",
-        pages = "R29"
-    ),
+    variancePartition = citation("variancePartition")[1])
+
+bib <- c(
     Jaffe2017= RefManageR::BibEntry(
-        "article",
-        key = "Jaffe2017",   
-        author = "Andrew E. Jaffe and Ran Tao and Alexis L. Norris and Marc Kealhofer and Abhinav Nellore and Joo Heon Shin and Dewey Kim and Yankai Jia and Thomas M. Hyde and Joel E. Kleinman and Richard E. Straub and Jeffrey T. Leek and Daniel R. Weinberger",
-        doi = "10.1073/pnas.1617384114",
-        issn = "10916490",
-        issue = "27",
-        journal = "Proceedings of the National Academy of Sciences of the United States of America",
-        keywords = "Differential expression analysis,RNA quality,RNA sequencing,Statistical modeling",
-        month = "7",
-        pages = "7130-7135",
-        pmid = "28634288",
-        publisher = "National Academy of Sciences",
-        title = "QSVA framework for RNA quality correction in differential expression analysis",
-        volume = "114",
-        year = "2017"
+      "article",
+      key = "Jaffe2017",   
+      author = " A. E. Jaffe and R. Tao and  A. L.  Norris and M. Kealhofer  and A. Nellore and J. H. Shin and K. Dewey and J. Yankai  and M. Hyde Thomas  and Joel E. Kleinman and Richard E. Straub and Jeffrey T. Leek and Daniel R. Weinberger",
+      doi = "10.1073/pnas.1617384114",
+      issn = "10916490",
+      issue = "27",
+      journal = "Proceedings of the National Academy of Sciences of the United States of America",
+      keywords = "Differential expression analysis,RNA quality,RNA sequencing,Statistical modeling",
+      month = "7",
+      pages = "7130-7135",
+      pmid = "28634288",
+      publisher = "National Academy of Sciences",
+      title = "QSVA framework for RNA quality correction in differential expression analysis",
+      volume = "114",
+      year = "2017"
     ),
     ColladoTorres2019 = RefManageR::BibEntry("article",
-        key = "Collado-Torres2019",
-        author = "Leonardo Collado-Torres and Emily E. Burke and Amy Peterson and Joo Heon Shin and Richard E. Straub and Anandita Rajpurohit and Stephen A. Semick and William S. Ulrich and Amanda J. Price and Cristian Valencia and Ran Tao and Amy Deep-Soboslay and Thomas M. Hyde and Joel E. Kleinman and Daniel R. Weinberger and Andrew E. Jaffe",
+        key = "ColladoTorres2019",
+        author = "L. Collado-Torres and Emily E. Burke and A. Peterson and J. H. Shin and Richard E. Straub and Anandita Rajpurohit and Stephen A. Semick and William S. Ulrich and Amanda J. Price and Cristian Valencia and Ran Tao and Amy Deep-Soboslay and Thomas M. Hyde and Joel E. Kleinman and Daniel R. Weinberger and Andrew E. Jaffe",
         doi = "10.1016/j.neuron.2019.05.013",
         issn = "10974199",
         issue = "2",
@@ -102,7 +94,7 @@ bib <- c(
     Law2020 = RefManageR::BibEntry(
         "article",
         key = "Law2020",
-        author = "Charity W. Law and Gordon K. Smyth and Matthew E. Ritchie and Kathleen Zeglinski and Xueyi Dong and Monther Alhamdoosh",
+        author = "W. Law Charity and K. Smyth Gordon and E. Ritchie Matthew and Kathleen Zeglinski and Xueyi Dong and Monther Alhamdoosh ",
         doi = "10.12688/f1000research.27893.1",
         issn = "1759796X",
         journal = "F1000Research",
@@ -122,7 +114,7 @@ Postmortem brain tissue is a valuable resource for studying the human brain and 
 
 Therefore, it's crucial to remove or at least minimize the effect of degradation in postmortem brain tissue to ensure the accuracy and reliability of research findings. This can be achieved through various methods, such as optimizing the conditions for tissue storage and preservation, using appropriate controls, and using statistical methods to correct for the effects of degradation.
 
-This method has been described in the initial qSVA framework paper [@Jaffe2017].
+This method has been described in the initial qSVA framework paper `r Citep(bib[["Jaffe2017"]], .opts = list(max.names = 1))`.
 
 This is a basic example which shows how to obtain the quality surrogate variables (qSVs) for BrainSeq Phase 2.
 
@@ -158,7 +150,7 @@ During the workshop, we will provide a step-by-step explanation of the qsvaR for
 
 # BrainSeq Phase 2 Dataset
 
-For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript level [@Collado-Torres2019]. This dataset is RiboZero RNA-seq data for 900 samples across both the dorsolateral prefrontal cortex (DLPFC) and the hippocampus (HIPPO) for 551 individuals (286 affected by schizophrenia disorder: SCZD) . Visit [here](https://eqtl.brainseq.org/phase2/) for more details.
+For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript level `r Citep(bib[["ColladoTorres2019"]], .opts = list(max.names = 1))`. This dataset is RiboZero RNA-seq data for 900 samples across both the dorsolateral prefrontal cortex (DLPFC) and the hippocampus (HIPPO) for 551 individuals (286 affected by schizophrenia disorder: SCZD) . Visit [here](https://eqtl.brainseq.org/phase2/) for more details.
 
 ## Load the data
 
@@ -471,7 +463,7 @@ The `getPCs()` applies PCA using the `prcomp` function.
 pcTx <- getPCs(DegTx, "tpm")
 ```
 
-We use a model matrix that accounts for relevant variables. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, DegTx, a RangedSummarizedExperiment object, is used as the rse_tx input.
+We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, DegTx, a RangedSummarizedExperiment object, is used as the rse_tx input.
 
 <div class="alert alert-info">
   <strong>Note:</strong> The model.matrix() function takes a formula and a data frame (or similar object) and returns the design matrix.
@@ -705,6 +697,7 @@ The `r Biocpkg("qsvaRPkgDemo")` package `r Citep(bib[["qsvaRPkgDemo"]])` was mad
 * `r CRANpkg("rmarkdown")` `r Citep(bib[["rmarkdown"]])`
 * `r CRANpkg("sessioninfo")` `r Citep(bib[["sessioninfo"]])`
 * `r CRANpkg("testthat")` `r Citep(bib[["testthat"]])`
+
 
 This package was developed using `r BiocStyle::Biocpkg("biocthis")`.
 
