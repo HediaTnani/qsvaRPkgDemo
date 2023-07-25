@@ -613,7 +613,6 @@ For comparison, here is the DEqual() plot for the model without qSVs.
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
 
-
 The results from the differential expression analysis without qSVA normalization are shown in the two DEqual plots. The contrast between the two plots is evident and reveals the effectiveness of degradation effect removal.
 
 In the first plot, the correlation stands at -0.038, suggesting a minimal relationship between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
