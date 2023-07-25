@@ -53,7 +53,66 @@ bib <- c(
     rmarkdown = citation("rmarkdown")[1],
     sessioninfo = citation("sessioninfo")[1],
     testthat = citation("testthat")[1],
-    qsvaRPkgDemo = citation("qsvaRPkgDemo")[1]
+    qsvaRPkgDemo = citation("qsvaRPkgDemo")[1],
+    SummarizedExperiment = citation("SummarizedExperiment")[1],
+    variancePartition = citation("variancePartition")[1],
+    voom = RefManageR::BibEntry(
+        "article",
+        key = "voom",
+        author = "CW Law and Y Chen and W Shi and GK Smyth",
+        year = "2014",
+        title = "Voom: precision weights unlock linear model analysis tools for RNA-seq read counts",
+        journal = "Genome Biology",
+        volume = "15",
+        pages = "R29"
+    ),
+    Jaffe2017= RefManageR::BibEntry(
+        "article",
+        key = "Jaffe2017",   
+        author = "Andrew E. Jaffe and Ran Tao and Alexis L. Norris and Marc Kealhofer and Abhinav Nellore and Joo Heon Shin and Dewey Kim and Yankai Jia and Thomas M. Hyde and Joel E. Kleinman and Richard E. Straub and Jeffrey T. Leek and Daniel R. Weinberger",
+        doi = "10.1073/pnas.1617384114",
+        issn = "10916490",
+        issue = "27",
+        journal = "Proceedings of the National Academy of Sciences of the United States of America",
+        keywords = "Differential expression analysis,RNA quality,RNA sequencing,Statistical modeling",
+        month = "7",
+        pages = "7130-7135",
+        pmid = "28634288",
+        publisher = "National Academy of Sciences",
+        title = "QSVA framework for RNA quality correction in differential expression analysis",
+        volume = "114",
+        year = "2017"
+    ),
+    ColladoTorres2019 = RefManageR::BibEntry("article",
+        key = "Collado-Torres2019",
+        author = "Leonardo Collado-Torres and Emily E. Burke and Amy Peterson and Joo Heon Shin and Richard E. Straub and Anandita Rajpurohit and Stephen A. Semick and William S. Ulrich and Amanda J. Price and Cristian Valencia and Ran Tao and Amy Deep-Soboslay and Thomas M. Hyde and Joel E. Kleinman and Daniel R. Weinberger and Andrew E. Jaffe",
+        doi = "10.1016/j.neuron.2019.05.013",
+        issn = "10974199",
+        issue = "2",
+        journal = "Neuron",
+        keywords = "RNA-seq,TWAS,brain,development,eQTL,human,regional coherence,schizophrenia",
+        month = "7",
+        pages = "203-216.e8",
+        pmid = "31174959",
+        publisher = "Cell Press",
+        title = "Regional Heterogeneity in Gene Expression, Regulation, and Coherence in the Frontal Cortex and Hippocampus across Development and Schizophrenia",
+        volume = "103",
+        year = "2019"
+    ),
+    Law2020 = RefManageR::BibEntry(
+        "article",
+        key = "Law2020",
+        author = "Charity W. Law and Gordon K. Smyth and Matthew E. Ritchie and Kathleen Zeglinski and Xueyi Dong and Monther Alhamdoosh",
+        doi = "10.12688/f1000research.27893.1",
+        issn = "1759796X",
+        journal = "F1000Research",
+        keywords = "Contrast matrix,Design matrix,Gene expression analysis,Model matrix,Statistical models",
+        pmid = "33604029",
+        publisher = "F1000 Research Ltd",
+        title = "A guide to creating design matrices for gene expression experiments",
+        volume = "9",
+        year = "2020"
+)
 )
 ```
 
@@ -62,6 +121,8 @@ bib <- c(
 Postmortem brain tissue is a valuable resource for studying the human brain and understanding various neurological and psychiatric disorders. However, the quality of postmortem brain tissue can be significantly affected by degradation, which can occur due to various factors such as the time elapsed since death (postmortem interval), the conditions in which the body was stored, and the method of tissue preservation.
 
 Therefore, it's crucial to remove or at least minimize the effect of degradation in postmortem brain tissue to ensure the accuracy and reliability of research findings. This can be achieved through various methods, such as optimizing the conditions for tissue storage and preservation, using appropriate controls, and using statistical methods to correct for the effects of degradation.
+
+This method has been described in the initial qSVA framework paper [@Jaffe2017].
 
 This is a basic example which shows how to obtain the quality surrogate variables (qSVs) for BrainSeq Phase 2.
 
@@ -627,9 +688,11 @@ In the first plot, the correlation stands at -0.038, suggesting a minimal relati
 
 Conversely, the second plot reveals a correlation of 0.5 with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce confounding factors in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
 
+In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
 
 # Conclusion
-In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
+
+From these findings, it can be concluded that adjusting for degradation in postmortem human brain tissue is critical in the analysis of differential gene expression data to effectively remove degradation effects. 
 
 # Reproducibility
 
