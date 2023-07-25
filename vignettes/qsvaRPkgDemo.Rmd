@@ -126,7 +126,7 @@ This is a basic example which shows how to obtain the quality surrogate variable
 
 # R/Bioconductor packages used
 
-```{r, eval=FALSE, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(SummarizedExperiment)
 library(tidySummarizedExperiment)
 library(tidyverse)
@@ -160,9 +160,10 @@ For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript
 
 ## Load the data
 
-The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`.
+The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented at the [BioC2023](http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html)
 
-```{r, eval=FALSE}
+```{r}
+options(timeout=400)
 ## Load the rse_tx object
 load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = T)
 
@@ -208,7 +209,7 @@ The following graphic displays the class geometry and highlights the vertical (c
 
 `mitoRate` : the decimal fraction of reads which mapped to the mitochondrial chromosome, of those which map at all (i.e.mitoMapped/ (totalMapped+mitoMapped)).
 
-`totalAssignedGene` : the decimal fraction of reads assigned unambiguously to a gene (including mitochondrial genes), with featureCounts(Liao et al.2014), of those in total.
+`totalAssignedGene` : the decimal fraction of reads assigned unambiguously to a gene (including mitochondrial genes), with featureCounts of those in total.
 
 `rRNA_rate` : the decimal fraction of reads assigned to a gene whose type is 'rRNA', of those assigned to any gene.
 
@@ -256,14 +257,15 @@ assays(rse_tx)$tpm
 # The first() function extracts the first element of the simplified result
 assays(rse_tx) %>%
     simplify() %>%
-    first()
+    first() %>% head() 
 ```
 
 ## Data distribution
 
-Let's have a look at the distribution of the tpm assay.
+Let's have a look at the distribution of the `tpm` assay.
 
-```{r, eval=FALSE}
+```{r}
+options(timeout=400)
 # Transform 'tpm' data to a long format with 'Transcript', 'Sample', and 'TPM' columns
 tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
     as.data.frame() %>%
@@ -291,25 +293,22 @@ mean_tpm <- tpm_tb %>%
         mean_TPM = mean(TPM, na.rm = TRUE),
         .groups = "drop" # This drops the grouping
     )
+```
 
-#  Dx      Region mean_TPM
-#   <chr>   <chr>     <dbl>
-# 1 Control DLPFC    0.0600
-# 2 Control HIPPO   -0.0385
-# 3 Schizo  DLPFC    0.0850
-# 4 Schizo  HIPPO   -0.0567
+Let's have a look at the boxplots.
 
+```{r, eval=FALSE}
 # Create boxplot for first 100,000 rows, without outliers, split by Dx and Region
-tpm_tb %>%
+p1 <- tpm_tb %>%
     slice(1:100000) %>%
     ggplot(aes(x = Dx, y = TPM, fill = Dx)) +
     geom_boxplot(outlier.shape = NA) +
     facet_wrap(~Region) +
     theme_minimal() +
-    labs(title = "Boxplot of TPM for Each Dx by Region", x = "Dx", y = "log2(TPM)+0.5")
+    labs(title = "Boxplot of TPM for Each Dx by Region",  x = "Dx", y = "log2(TPM)+0.5")
 
 # Create a histogram of TPM for each Dx
-tpm_tb %>%
+p2 <- tpm_tb %>%
     slice(1:100000) %>%
     ggplot(aes(x = TPM, fill = Dx)) +
     geom_histogram(alpha = 0.5, bins = 30, position = "identity") +
@@ -318,13 +317,15 @@ tpm_tb %>%
     labs(title = "Histogram of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Count")
 
 # Create a density plot of TPM for each Dx
-tpm_tb %>%
+p3 <- tpm_tb %>%
     slice(1:100000) %>%
     ggplot(aes(x = TPM, fill = Dx)) +
     geom_density(alpha = 0.5) +
     facet_wrap(~Dx) +
     theme_minimal() +
     labs(title = "Density Plot of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Density")
+
+p1
 ```
 
 ## Variance Partition Analysis
@@ -356,7 +357,7 @@ Understanding these relationships will allow us to develop a more accurate and r
 
 Let's first unlist RIN, mitoMapped and totalAssignedGene .
 
-```{r, eval=FALSE}
+```{r}
 colData(rse_tx)$RIN <- as.numeric(unlist(colData(rse_tx)$RIN))
 colData(rse_tx)$mitoMapped <- unlist(map(colData(rse_tx)$mitoMapped, 1))
 colData(rse_tx)$totalAssignedGene <- unlist(map(colData(rse_tx)$totalAssignedGene, 1))
@@ -381,7 +382,7 @@ In the context of the `variancePartition` package, the `canCorPairs()` computes 
   <strong>Note:</strong> canCorPairs returns correlation values between 0 and 1. Canonical Correlation Analysis (CCA) returns sqrt(mean(rho^2)), which is the fraction of the maximum possible correlation. When comparing a two vectors, or a vector and a matrix, this gives the save value as the absolute correlation. When comparing two sets of categorical variables, this is equivalent to Cramer's V statistic.
 </div>
 
-```{r, eval=FALSE}
+```{r}
 formula <- ~ Dx + RIN + Age + Sex + Race + mitoMapped + overallMapRate + mitoRate + rRNA_rate + concordMapRate + totalMapped + totalAssignedGene + Region
 correlation_matrix <- canCorPairs(formula, colData(rse_tx))
 
@@ -454,19 +455,19 @@ The `cell_component` model, involved `deconvolution` of the degradation matrix t
 
 In this example we will choose `cell_component` when using the `getDegTx()` and `select_transcripts()` functions. `getDegTx()` is used to select a specific set of transcripts from a given experiment, and provides a warning if the mean expression level of these transcripts is low.
 
-```{r, eval=FALSE}
+```{r}
 ## Next we get the degraded transcripts for qSVA from the "cell_component"
 ## model
 DegTx <- getDegTx(rse_tx, type = "cell_component")
 dim(DegTx)
-# [1] 2976  900
 ```
 
 The `getPCs()` applies PCA using the `prcomp` function.
 
-```{r, eval=FALSE}
+```{r}
 ## Now we can compute the Principal Components (PCs) of the degraded transcripts
 pcTx <- getPCs(DegTx, "tpm")
+head(pcTx$x)[,1:10]
 ```
 
 We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, DegTx, a RangedSummarizedExperiment object, is used as the rse_tx input.
@@ -490,7 +491,7 @@ In this case, Dx, Age, Sex, Race, and Region are your `predictors`.
 
 data = colData(rse_tx): This argument tells R which dataset to use for creating the design matrix. 
 
-```{r, eval=FALSE}
+```{r}
 # Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.
 mod <- model.matrix(~ Dx + Age + Sex + Race + Region,
     data = colData(rse_tx)
@@ -498,30 +499,25 @@ mod <- model.matrix(~ Dx + Age + Sex + Race + Region,
 
 # check the names of the columns in the mod matrix
 colnames(mod)
-# [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"
-# [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO"
 ```
 
 The `k_qsvs()` function is employed to determine the required number of Principal Components (PCs) needed to capture the underlying variation in our data.
 
-```{r, eval=FALSE}
+```{r}
 # Get the number of qsvs
 set.seed(20230703)
 k <- k_qsvs(DegTx, mod, "tpm")
 print(k)
-# [1] 34
 ```
 
 You can simplify the process by utilizing our integrated function, `qSVA`. This wrapper function conveniently combines all previously mentioned functions, streamlining the analysis into a single step.
 
-```{r, eval=FALSE}
+```{r}
 ## Example use of the wrapper function qSVA()
 set.seed(20230703)
 qsva_pcs_cc <- qSVA(rse_tx, type = "cell_component", mod = mod, assayname = "tpm")
 dim(qsva_pcs_cc)
-#> [1] 900  34
 ```
-
 
 ## Differential Expression using limma
 
@@ -545,7 +541,7 @@ Here:
 
 **error** is the noise or unexplained variability in gene expression.
 
-```{r, eval=FALSE}
+```{r}
 ## Add the qSVs to our statistical model
 mod_qSVA <- cbind(
     mod,
@@ -555,7 +551,7 @@ mod_qSVA <- cbind(
 
 `mod_qSVA` includes both our original model and the qSVs. The qSVs adjust for the degradation effect.
 
-```{r, eval=FALSE}
+```{r}
 ## Extract the transcript expression values and put them in the
 ## log2(TPM + 1) scale
 txExprs <- log2(assays(rse_tx)$tpm + 0.5)
@@ -575,22 +571,13 @@ The `lmFit()` function fits a separate linear model to each gene (or transcript,
 
 After fitting the model, `eBayes()` is used to compute `empirical Bayes statistics` for differential expression. The function applies a shrinkage technique to the standard errors, improving the stability of the estimates, particularly when the number of samples is small. 
 
-```{r, eval=FALSE}
+```{r}
 colnames(eBTx)
-#  [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"
-#  [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO" "qSV1"        "qSV2"
-# [11] "qSV3"        "qSV4"        "qSV5"        "qSV6"        "qSV7"
-# [16] "qSV8"        "qSV9"        "qSV10"       "qSV11"       "qSV12"
-# [21] "qSV13"       "qSV14"       "qSV15"       "qSV16"       "qSV17"
-# [26] "qSV18"       "qSV19"       "qSV20"       "qSV21"       "qSV22"
-# [31] "qSV23"       "qSV24"       "qSV25"       "qSV26"       "qSV27"
-# [36] "qSV28"       "qSV29"       "qSV30"       "qSV31"       "qSV32"
-# [41] "qSV33"       "qSV34"
 ```
 
 Let's do the differential expression analysis.
 
-```{r, eval=FALSE}
+```{r}
 ## Extract the differential expression results
 sigTx <- topTable(eBTx,
     coef = "DxSchizo",
@@ -602,7 +589,7 @@ sigTx <- topTable(eBTx,
 
 Let's explore the top results.
 
-```{r, eval=FALSE}
+```{r}
 ## Explore the top results
 head(sigTx)
 ```
@@ -647,18 +634,12 @@ It takes as input a data frame (DE) containing differential expression results, 
 
 The function identifies the transcripts that are common between the `DE dataframe` and `degradation_tstats` from the qsvaR package and creates a new dataframe, common_data, which contains the `degradation t-statistics` and `DE t-statistics` for the common transcripts.
 
-```{r, eval=FALSE}
+```{r}
 ## Generate a DEqual() plot using the model results with qSVs
 DEqual(sigTx)
 ```
 
-The color of each bin represents the number of data points (in this case, transcripts) within that bin. This is set by the `scale_fill_continuous()`, which maps the continuous number of data points in each bin to a continuous color scale.
-
-The `type = "viridis"` argument specifies the use of the viridis color scale. The viridis color scale ranges from dark purple (for low values) through blue, green, yellow, and up to bright yellow (for high values).
-
 In this plot:
-
-![DEqual plot without adjustment](figs/DEplot_after_qsva.png){width=400%}
 
 **Dark purple to blue bins**: These colors represent bins with a low number of data points. If a bin is dark purple or blue, it means there are relatively few transcripts with those particular DE and degradation t-statistics.
 
@@ -668,25 +649,21 @@ In this plot:
 
 For comparison, here is the DEqual() plot for the model without qSVs.
 
-```{r, eval=FALSE}
+```{r}
 ## Generate a DEqual() plot using the model results without qSVs
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
-
-<br>
-<br>
-
-![DEqualplot without adjustment](figs/DEplot_before_qsva.png){width=400%}
-
 <br>
 
 The results from the differential expression analysis without qSVA normalization are shown in the two DEqual plots. The contrast between the two plots is evident and reveals the effectiveness of degradation effect removal.
 
-In the first plot, the correlation stands at -0.038, suggesting a minimal relationship between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
+In the first plot, the correlation stands at **-0.038**, suggesting a minimal relationship between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
 
-Conversely, the second plot reveals a correlation of 0.5 with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce confounding factors in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
+Conversely, the second plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce confounding factors in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
 
-In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
+<div class="alert alert-info">
+  <strong>Note:</strong> In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
+</div>
 
 # Conclusion
 

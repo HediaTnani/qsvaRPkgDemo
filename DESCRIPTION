@@ -19,6 +19,18 @@ Suggests:
     RefManageR,
     rmarkdown,
     sessioninfo,
+    SummarizedExperiment,
+    tidySummarizedExperiment,
+    tidyverse,
+    variancePartition,
+    ComplexHeatmap,
+    colorRamp2,
+    ggplot2,
+    magrittr,
+    purrr,
+    dplyr,
+    limma,
+    qsvaR,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
