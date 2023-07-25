@@ -67,7 +67,7 @@ This is a basic example which shows how to obtain the quality surrogate variable
 
 # R/Bioconductor packages used
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE, warning=FALSE, message=FALSE}
 library(SummarizedExperiment)
 library(tidySummarizedExperiment)
 library(tidyverse)
