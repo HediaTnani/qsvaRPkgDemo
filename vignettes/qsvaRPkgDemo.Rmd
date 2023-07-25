@@ -593,12 +593,13 @@ The function identifies the transcripts that are common between the `DE datafram
 DEqual(sigTx)
 ```
 
-
 The color of each bin represents the number of data points (in this case, transcripts) within that bin. This is set by the `scale_fill_continuous()`, which maps the continuous number of data points in each bin to a continuous color scale.
 
 The `type = "viridis"` argument specifies the use of the viridis color scale. The viridis color scale ranges from dark purple (for low values) through blue, green, yellow, and up to bright yellow (for high values).
 
 In this plot:
+
+![DEqual plot without adjustment](figs/DEplot_after_qsva.png){width=400%}
 
 **Dark purple to blue bins**: These colors represent bins with a low number of data points. If a bin is dark purple or blue, it means there are relatively few transcripts with those particular DE and degradation t-statistics.
 
@@ -612,6 +613,9 @@ For comparison, here is the DEqual() plot for the model without qSVs.
 ## Generate a DEqual() plot using the model results without qSVs
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
+
+
+![DEqualplot without adjustment](figs/DEplot_before_qsva.png){width=400%}
 
 The results from the differential expression analysis without qSVA normalization are shown in the two DEqual plots. The contrast between the two plots is evident and reveals the effectiveness of degradation effect removal.
 
