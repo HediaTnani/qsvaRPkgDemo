@@ -55,9 +55,16 @@ bib <- c(
     testthat = citation("testthat")[1],
     qsvaRPkgDemo = citation("qsvaRPkgDemo")[1],
     SummarizedExperiment = citation("SummarizedExperiment")[1],
-    variancePartition = citation("variancePartition")[1])
-
-bib <- c(
+    tidySummarizedExperiment = citation("tidySummarizedExperiment")[1],
+    tidyverse = citation("tidyverse")[1],
+    ComplexHeatmap = citation("ComplexHeatmap")[1],
+    colorRamp2 = citation("colorRamp2")[1],
+    magrittr = citation("magrittr")[1],
+    purrr = citation("purrr")[1],
+    dplyr = citation("dplyr")[1],
+    limma = citation("limma")[1],
+    variancePartition = citation("variancePartition")[1],
+    qsvaR = citation("qsvaR")[1],
     Jaffe2017= RefManageR::BibEntry(
       "article",
       key = "Jaffe2017",   
@@ -104,8 +111,7 @@ bib <- c(
         title = "A guide to creating design matrices for gene expression experiments",
         volume = "9",
         year = "2020"
-)
-)
+))
 ```
 
 # Introduction
