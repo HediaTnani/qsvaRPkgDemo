@@ -46,7 +46,7 @@ Please run this yourself to check for any updates on how to cite
 **qsvaRPkgDemo**.
 
 ``` r
-print(citation('qsvaRPkgDemo'), bibtex = TRUE)
+print(citation("qsvaRPkgDemo"), bibtex = TRUE)
 #> 
 #> To cite package 'qsvaRPkgDemo' in publications use:
 #> 

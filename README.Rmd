@@ -47,7 +47,7 @@ Below is the citation output from using `citation('qsvaRPkgDemo')` in R. Please
 run this yourself to check for any updates on how to cite __qsvaRPkgDemo__.
 
 ```{r 'citation', eval = requireNamespace('qsvaRPkgDemo')}
-print(citation('qsvaRPkgDemo'), bibtex = TRUE)
+print(citation("qsvaRPkgDemo"), bibtex = TRUE)
 ```
 
 Please note that the `qsvaRPkgDemo` was only made possible thanks to many other R and bioinformatics software authors, which are cited either in the vignettes and/or the paper(s) describing this package.

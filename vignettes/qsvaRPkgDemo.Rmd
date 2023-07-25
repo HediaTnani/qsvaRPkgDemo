@@ -105,7 +105,7 @@ The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarized
 
 ```{r, eval=FALSE}
 ## Load the rse_tx object
-load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose=T)
+load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = T)
 
 ## General overview of the object
 rse_tx
@@ -186,18 +186,18 @@ There are many ways to access the `tpm` data. Below some of them:
 ```{r, eval=FALSE}
 # Extract the first element from the list of assays in the SummarizedExperiment object
 # This assumes that the first element in the list of assays is the one you are interested in
-assays(rse_tx) %>% extract2(1) 
+assays(rse_tx) %>% extract2(1)
 
 # Another way of extracting the first element from the list of assays in the SummarizedExperiment object
 # Here, 'tpm' is assumed to be the name of the first assay
-assays(rse_tx)$tpm 
+assays(rse_tx)$tpm
 
 # Yet another way of extracting the first element from the list of assays in the SummarizedExperiment object
 # The simplify() function tries to simplify the result to a vector or matrix if possible
 # The first() function extracts the first element of the simplified result
 assays(rse_tx) %>%
-simplify() %>%
-first()
+    simplify() %>%
+    first()
 ```
 
 ## Data distribution
@@ -206,30 +206,32 @@ Let's have a look at the distribution of the tpm assay.
 
 ```{r, eval=FALSE}
 # Transform 'tpm' data to a long format with 'Transcript', 'Sample', and 'TPM' columns
-tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>% as.data.frame() %>%
-  rownames_to_column(var = "Transcript") %>%
-  pivot_longer(
-    cols = -Transcript,
-    names_to = "Sample",
-    values_to = "TPM"
-  )
+tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "Transcript") %>%
+    pivot_longer(
+        cols = -Transcript,
+        names_to = "Sample",
+        values_to = "TPM"
+    )
 
 # Extract 'RNum', 'Region', and 'Dx' from 'rse_tx', convert to tibble
-colData_tb <- colData(rse_tx) %>% 
-  as.data.frame() %>% 
-  dplyr::select(RNum, Region, Dx) %>% as_tibble()
+colData_tb <- colData(rse_tx) %>%
+    as.data.frame() %>%
+    dplyr::select(RNum, Region, Dx) %>%
+    as_tibble()
 
 # Join 'tpm_tb' with 'colData_tb' based on 'Sample' and 'RNum'
 tpm_tb <- tpm_tb %>%
-  dplyr::left_join(colData_tb, by = c("Sample" = "RNum"))
+    dplyr::left_join(colData_tb, by = c("Sample" = "RNum"))
 
 # Calculate mean TPM for each Dx and Region
 mean_tpm <- tpm_tb %>%
-  group_by(Dx, Region) %>%
-  summarise(
-    mean_TPM = mean(TPM, na.rm = TRUE),
-    .groups = "drop" # This drops the grouping
-  )
+    group_by(Dx, Region) %>%
+    summarise(
+        mean_TPM = mean(TPM, na.rm = TRUE),
+        .groups = "drop" # This drops the grouping
+    )
 
 #  Dx      Region mean_TPM
 #   <chr>   <chr>     <dbl>
@@ -239,28 +241,31 @@ mean_tpm <- tpm_tb %>%
 # 4 Schizo  HIPPO   -0.0567
 
 # Create boxplot for first 100,000 rows, without outliers, split by Dx and Region
-tpm_tb %>% slice(1:100000) %>%
-  ggplot(aes(x = Dx, y = TPM, fill = Dx)) +
-  geom_boxplot(outlier.shape = NA) +
-  facet_wrap(~ Region) +
-  theme_minimal() +
-  labs(title = "Boxplot of TPM for Each Dx by Region", x = "Dx", y = "log2(TPM)+0.5")
+tpm_tb %>%
+    slice(1:100000) %>%
+    ggplot(aes(x = Dx, y = TPM, fill = Dx)) +
+    geom_boxplot(outlier.shape = NA) +
+    facet_wrap(~Region) +
+    theme_minimal() +
+    labs(title = "Boxplot of TPM for Each Dx by Region", x = "Dx", y = "log2(TPM)+0.5")
 
 # Create a histogram of TPM for each Dx
-tpm_tb %>% slice(1:100000) %>%
-  ggplot(aes(x = TPM, fill = Dx)) +
-  geom_histogram(alpha = 0.5, bins = 30, position = "identity") +
-  facet_wrap(~ Dx) +
-  theme_minimal() +
-  labs(title = "Histogram of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Count")
+tpm_tb %>%
+    slice(1:100000) %>%
+    ggplot(aes(x = TPM, fill = Dx)) +
+    geom_histogram(alpha = 0.5, bins = 30, position = "identity") +
+    facet_wrap(~Dx) +
+    theme_minimal() +
+    labs(title = "Histogram of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Count")
 
 # Create a density plot of TPM for each Dx
-tpm_tb %>% slice(1:100000) %>%
-  ggplot(aes(x = TPM, fill = Dx)) +
-  geom_density(alpha = 0.5) +
-  facet_wrap(~ Dx) +
-  theme_minimal() +
-  labs(title = "Density Plot of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Density")
+tpm_tb %>%
+    slice(1:100000) %>%
+    ggplot(aes(x = TPM, fill = Dx)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~Dx) +
+    theme_minimal() +
+    labs(title = "Density Plot of TPM for Each Dx", x = "log2(TPM)+0.5", y = "Density")
 ```
 
 ## Variance Partition Analysis
@@ -293,18 +298,18 @@ Understanding these relationships will allow us to develop a more accurate and r
 Let's first unlist RIN, mitoMapped and totalAssignedGene .
 
 ```{r, eval=FALSE}
-colData(rse_tx)$RIN = as.numeric(unlist(colData(rse_tx)$RIN))
-colData(rse_tx)$mitoMapped = unlist(map(colData(rse_tx)$mitoMapped,1))
-colData(rse_tx)$totalAssignedGene = unlist(map(colData(rse_tx)$totalAssignedGene,1))
-colData(rse_tx)$rRNA_rate = unlist(map(colData(rse_tx)$rRNA_rate,1))
-colData(rse_tx)$numReads = unlist(map(colData(rse_tx)$numReads,1))
-colData(rse_tx)$numMapped = unlist(map(colData(rse_tx)$numMapped,1))
-colData(rse_tx)$numUnmapped = unlist(map(colData(rse_tx)$numUnmapped,1))
-colData(rse_tx)$overallMapRate = unlist(map(colData(rse_tx)$overallMapRate,1))
-colData(rse_tx)$concordMapRate = unlist(map(colData(rse_tx)$concordMapRate,1))
-colData(rse_tx)$totalMapped = unlist(map(colData(rse_tx)$totalMapped,1))
-colData(rse_tx)$mitoRate = unlist(map(colData(rse_tx)$mitoRate,1))
-colData(rse_tx)$ERCCsumLogErr = unlist(map(colData(rse_tx)$ERCCsumLogErr,1))
+colData(rse_tx)$RIN <- as.numeric(unlist(colData(rse_tx)$RIN))
+colData(rse_tx)$mitoMapped <- unlist(map(colData(rse_tx)$mitoMapped, 1))
+colData(rse_tx)$totalAssignedGene <- unlist(map(colData(rse_tx)$totalAssignedGene, 1))
+colData(rse_tx)$rRNA_rate <- unlist(map(colData(rse_tx)$rRNA_rate, 1))
+colData(rse_tx)$numReads <- unlist(map(colData(rse_tx)$numReads, 1))
+colData(rse_tx)$numMapped <- unlist(map(colData(rse_tx)$numMapped, 1))
+colData(rse_tx)$numUnmapped <- unlist(map(colData(rse_tx)$numUnmapped, 1))
+colData(rse_tx)$overallMapRate <- unlist(map(colData(rse_tx)$overallMapRate, 1))
+colData(rse_tx)$concordMapRate <- unlist(map(colData(rse_tx)$concordMapRate, 1))
+colData(rse_tx)$totalMapped <- unlist(map(colData(rse_tx)$totalMapped, 1))
+colData(rse_tx)$mitoRate <- unlist(map(colData(rse_tx)$mitoRate, 1))
+colData(rse_tx)$ERCCsumLogErr <- unlist(map(colData(rse_tx)$ERCCsumLogErr, 1))
 ```
 
 
@@ -318,7 +323,7 @@ In the context of the `variancePartition` package, the `canCorPairs()` computes 
 </div>
 
 ```{r, eval=FALSE}
-formula <- ~Dx + RIN+ Age + Sex + Race + mitoMapped +  overallMapRate + mitoRate + rRNA_rate + concordMapRate + totalMapped + totalAssignedGene + Region  
+formula <- ~ Dx + RIN + Age + Sex + Race + mitoMapped + overallMapRate + mitoRate + rRNA_rate + concordMapRate + totalMapped + totalAssignedGene + Region
 correlation_matrix <- canCorPairs(formula, colData(rse_tx))
 
 # Create the heatmap
@@ -327,20 +332,22 @@ color_func <- colorRamp2(c(-1, 0, 1), c("darkgreen", "white", "purple"))
 
 # Create the heatmap
 Heatmap(correlation_matrix,
-        name = "Correlation",      # Title for the color key
-        show_row_names = TRUE,      # Show row names
-        show_column_names = TRUE,   # Show column names
-        cluster_rows = FALSE,       # Do not cluster rows
-        cluster_columns = FALSE,    # Do not cluster columns
-        cell_fun = function(j, i, x, y, width, height, fill) {
-                    grid.text(sprintf("%.2f", correlation_matrix[i, j]), x, y,
-                              gp = gpar(fontsize = 10))
-                    },
-        col = color_func, # Use the custom color function
-        heatmap_legend_param = list(title = "Correlation", # legend title
-                                    color_bar = "continuous", # type of color bar
-                                    legend_direction = "horizontal" # direction of legend
-                                    )
+    name = "Correlation", # Title for the color key
+    show_row_names = TRUE, # Show row names
+    show_column_names = TRUE, # Show column names
+    cluster_rows = FALSE, # Do not cluster rows
+    cluster_columns = FALSE, # Do not cluster columns
+    cell_fun = function(j, i, x, y, width, height, fill) {
+        grid.text(sprintf("%.2f", correlation_matrix[i, j]), x, y,
+            gp = gpar(fontsize = 10)
+        )
+    },
+    col = color_func, # Use the custom color function
+    heatmap_legend_param = list(
+        title = "Correlation", # legend title
+        color_bar = "continuous", # type of color bar
+        legend_direction = "horizontal" # direction of legend
+    )
 )
 ```
 
@@ -432,7 +439,7 @@ mod <- model.matrix(~ Dx + Age + Sex + Race + Region,
 
 # check the names of the columns in the mod matrix
 colnames(mod)
-# [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"     
+# [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"
 # [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO"
 ```
 
@@ -511,15 +518,15 @@ After fitting the model, `eBayes()` is used to compute `empirical Bayes statisti
 
 ```{r, eval=FALSE}
 colnames(eBTx)
-#  [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"     
-#  [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO" "qSV1"        "qSV2"       
-# [11] "qSV3"        "qSV4"        "qSV5"        "qSV6"        "qSV7"       
-# [16] "qSV8"        "qSV9"        "qSV10"       "qSV11"       "qSV12"      
-# [21] "qSV13"       "qSV14"       "qSV15"       "qSV16"       "qSV17"      
-# [26] "qSV18"       "qSV19"       "qSV20"       "qSV21"       "qSV22"      
-# [31] "qSV23"       "qSV24"       "qSV25"       "qSV26"       "qSV27"      
-# [36] "qSV28"       "qSV29"       "qSV30"       "qSV31"       "qSV32"      
-# [41] "qSV33"       "qSV34"  
+#  [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"
+#  [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO" "qSV1"        "qSV2"
+# [11] "qSV3"        "qSV4"        "qSV5"        "qSV6"        "qSV7"
+# [16] "qSV8"        "qSV9"        "qSV10"       "qSV11"       "qSV12"
+# [21] "qSV13"       "qSV14"       "qSV15"       "qSV16"       "qSV17"
+# [26] "qSV18"       "qSV19"       "qSV20"       "qSV21"       "qSV22"
+# [31] "qSV23"       "qSV24"       "qSV25"       "qSV26"       "qSV27"
+# [36] "qSV28"       "qSV29"       "qSV30"       "qSV31"       "qSV32"
+# [41] "qSV33"       "qSV34"
 ```
 
 Let's do the differential expression analysis.
