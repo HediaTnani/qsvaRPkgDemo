@@ -85,9 +85,9 @@ library(qsvaR)
 # Time Outline
 |            Activity            | Time |
 |:------------------------------:|:----:|
-| Introduction to qsvaR (slides) | 15m  |
+| Introduction to qsvaR (slides) | 10m  |
 | Data overview                  | 5m   |
-| Limma and qsvaR                | 15m  |
+| Limma and qsvaR                | 20m  |
 
 Total: a 35 minute session.
 
