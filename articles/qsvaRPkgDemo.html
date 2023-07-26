@@ -192,14 +192,11 @@ affected by schizophrenia disorder: SCZD) . Visit <a href="https://eqtl.brainseq
 <code>rse_tx</code>. It has been obtained after running the
 <code>SPEAQeasy</code> pipeline. To have a better understanding of how
 the pipeline works please attend the workshop that will be presented by
-Lieber collegues at the <a href="http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html" class="external-link">BioC2023</a></p>
+Lieber collegues at the <a href="https://bioc2023.bioconductor.org/abstracts/paper24/" class="external-link">BioC2023</a></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>timeout <span class="op">=</span> <span class="fl">400</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/memory.size.html" class="external-link">memory.limit</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">56000</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: 'memory.limit()' is Windows-specific</span></span>
-<span><span class="co">#&gt; [1] Inf</span></span>
 <span><span class="co">## Load the rse_tx object</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading objects:</span></span>
 <span><span class="co">#&gt;   rse_tx</span></span>
 <span></span>
@@ -606,7 +603,7 @@ and the cell proportions model were used to generate this model of qSVs.
 </div>
 </div>
 <div class="section level4">
-<h4 id="run-qsva">Run qSVA<a class="anchor" aria-label="anchor" href="#run-qsva"></a>
+<h4 id="run-qsva-step-by-step">Run qSVA step by step<a class="anchor" aria-label="anchor" href="#run-qsva-step-by-step"></a>
 </h4>
 <p>After loading the <code>rse_tx</code> object we subset for the
 transcripts associated with degradation.</p>
@@ -796,47 +793,59 @@ specific term.</p>
 <span><span class="co">#&gt; ENST00000530589.1  5.163833</span></span>
 <span><span class="co">#&gt; ENST00000549117.5  4.886725</span></span></code></pre></div>
 <p>Here’s a breakdown of what each column in this output represents:</p>
-<p><strong>logFC (Log Fold Change)</strong>: This represents the log2
-fold-change for the differential expression between two conditions. A
-positive value indicates higher expression in the second condition,
+<ul>
+<li><p><strong>logFC (Log Fold Change)</strong>: This represents the
+log2 fold-change for the differential expression between two conditions.
+A positive value indicates higher expression in the second condition,
 while a negative value indicates higher expression in the first
 condition. For example, a logFC of -0.07856532 for ENST00000553142.5
 means this transcript has lower expression in the second condition
-compared to the first.</p>
-<p><strong>AveExpr (Average Expression)</strong>: This is the average
-log2 expression level of the gene across all samples. It provides a
-general idea of how abundantly the gene is expressed.</p>
-<p><strong>t (t-statistic)</strong>: This is the t-statistic from the
-differential expression test. It is a measure of how different the
+compared to the first.</p></li>
+<li><p><strong>AveExpr (Average Expression)</strong>: This is the
+average log2 expression level of the gene across all samples. It
+provides a general idea of how abundantly the gene is
+expressed.</p></li>
+<li><p><strong>t (t-statistic)</strong>: This is the t-statistic from
+the differential expression test. It is a measure of how different the
 expression levels of the gene are between the two conditions, in units
-of standard error.</p>
+of standard error.</p></li>
+</ul>
 <div class="alert alert-info">
 <p><strong>Note:</strong> A higher absolute value of the t-statistic
 means the gene’s expression is more significantly different between the
 conditions.</p>
 </div>
-<p><strong>P.Value (p-value)</strong>: This is the p-value from the
+<ul>
+<li>
+<strong>P.Value (p-value)</strong>: This is the p-value from the
 differential expression test. It quantifies the statistical evidence
 against the null hypothesis that the gene’s expression levels are the
-same in the two conditions.</p>
+same in the two conditions.</li>
+</ul>
 <div class="alert alert-info">
 <p><strong>Note:</strong> A lower p-value suggests stronger evidence
 against the null hypothesis.</p>
 </div>
-<p><strong>adj.P.Val (Adjusted p-value)</strong>: This is the p-value
+<ul>
+<li>
+<strong>adj.P.Val (Adjusted p-value)</strong>: This is the p-value
 adjusted for multiple testing using the method of Benjamini and
 Hochberg, also known as the false discovery rate (FDR). It helps control
 for false positives when testing multiple hypotheses (genes) at
-once.</p>
+once.</li>
+</ul>
 <div class="alert alert-info">
 <p><strong>Note:</strong> Typically, genes with an adjusted p-value (or
 FDR) less than 0.05 or 0.01 are considered statistically significantly
 differentially expressed.</p>
 </div>
-<p><strong>B (B-statistic or log-odds of differential
+<ul>
+<li>
+<strong>B (B-statistic or log-odds of differential
 expression)</strong>: This is the B-statistic from the empirical Bayes
 analysis, which can be interpreted as the log-odds that the gene is
-differentially expressed.</p>
+differentially expressed.</li>
+</ul>
 <div class="alert alert-info">
 <p><strong>Note:</strong> A higher B-statistic means the gene is more
 likely to be differentially expressed.</p>
@@ -987,9 +996,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-26 12:17:45 EDT"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-26 14:13:23 EDT"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 13.249 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 12.946 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
