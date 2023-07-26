@@ -133,7 +133,7 @@ This is a basic example which shows how to obtain the quality surrogate variable
 
 # R/Bioconductor packages used
 
-```{r, warning=FALSE, message=FALSE}
+```{r loadPackages, warning=FALSE, message=FALSE}
 library(SummarizedExperiment)
 library(tidySummarizedExperiment)
 library(tidyverse)
@@ -159,7 +159,7 @@ Total: a 35 minute session.
 
 # Workshop goals
 
-During the workshop, we will provide a step-by-step explanation of the qsvaR for entry-level users and apply it to BrainSeq Phase 2 dataset. We will describe how using qsvaR can improve the reproducibility of DE analyses across datasets.
+During the workshop, we will provide a step-by-step explanation of the qsvaR and apply it to BrainSeq Phase 2 dataset. We will describe how using qsvaR can improve the reproducibility of differential expression analyses across datasets.
 
 # BrainSeq Phase 2 Dataset
 
@@ -167,9 +167,9 @@ For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript
 
 ## Load the data
 
-The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented at the [BioC2023](http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html)
+The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented by Lieber collegues at the [BioC2023](http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html)
 
-```{r}
+```{r loadData}
 options(timeout = 400)
 memory.limit(size = 56000)
 ## Load the rse_tx object
@@ -185,15 +185,21 @@ This is a `SummarizedExperiment` object but it is evaluated as a tibble. So it i
 
 The `SummarizedExperiment` package contains two classes: `SummarizedExperiment` and `RangedSummarizedExperiment`.
 
-`RangedSummarizedExperiment` is a subclass of the SummarizedExperiment class, meaning it inherits all the features and functionalities of its parent class. The primary difference is that the rows of a `RangedSummarizedExperiment` object represent genomic ranges of interest, rather than a `DataFrame` of features. Here's what you need to know about RangedSummarizedExperiment:
+`RangedSummarizedExperiment` is a subclass of the SummarizedExperiment class, meaning it inherits all the features and functionalities of its parent class.
 
-`GenomicRanges` Representation: `RangedSummarizedExperiment` objects use a `GRanges` or `GRangesList` object to represent genomic ranges. These objects store information about genomic coordinates, genomic features, and annotations for the ranges of interest. The `rowRanges()` function allows you to access and manipulate the genomic range information within a `RangedSummarizedExperiment` object.
+<div class="alert alert-info">
+  <strong>Note:</strong> The primary difference is that the rows of a `RangedSummarizedExperiment` object represent genomic ranges of interest, rather than a `DataFrame` of features.
+</div>
+
+`RangedSummarizedExperiment` objects use a `GRanges` or `GRangesList` object to represent genomic ranges. These objects store information about genomic coordinates, genomic features, and annotations for the ranges of interest. The `rowRanges()` function allows you to access and manipulate the `GenomicRanges` information within a `RangedSummarizedExperiment` object.
 
 The following graphic displays the class geometry and highlights the vertical (column) and horizontal (row) relationships.
 
 ![RangedSummarizedExperiment](figs/rse_object.png){width=400%}
 
-## Sample data
+## Sample Information
+
+The sample information in `colData(rse_tx)` contains the following main variables:
 
 `SAMPLE_ID` : is the name of the sample.
 
@@ -237,9 +243,10 @@ The following graphic displays the class geometry and highlights the vertical (c
 
 `Dx` : refers to the diagnosis of the donors from which the samples were taken.
 
+
 ## Data normalization
 
-The `rse_tx` object contains the following assays:
+The `rse_tx` object contains the following `Transcripts Per Million (TPM)` or `tpm` normalized assays:
 
 ```{r, eval=FALSE}
 assays(rse_tx)
@@ -247,11 +254,13 @@ assays(rse_tx)
 
 `tpm`: normalized read counts of the 19,8093 genes across 900 samples.
 
-`Transcripts Per Million (TPM)` is a normalization method for RNA-seq data that facilitates comparisons both within and between samples. It adjusts for `gene length` and `sequencing depth`, making it a helpful measure for relative gene expression.
+<div class="alert alert-info">
+  <strong>Note:</strong> `Transcripts Per Million (TPM)` is a normalization method for RNA-seq data that facilitates comparisons both within and between samples. It adjusts for `gene length` and `sequencing depth`, making it a helpful measure for relative gene expression.
+</div>
 
 There are many ways to access the `tpm` data. Below some of them:
 
-```{r, eval=FALSE}
+```{r Gettpm, eval=FALSE}
 # Extract the first element from the list of assays in the SummarizedExperiment object
 # This assumes that the first element in the list of assays is the one you are interested in
 assays(rse_tx) %>% extract2(1)
@@ -272,8 +281,9 @@ assays(rse_tx) %>%
 ## Data distribution
 
 Let's have a look at the distribution of the `tpm` assay.
+Before we have to reformat the data as follows:
 
-```{r}
+```{r TransformData}
 options(timeout = 400)
 # Transform 'tpm' data to a long format with 'Transcript', 'Sample', and 'TPM' columns
 tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
@@ -304,9 +314,9 @@ mean_tpm <- tpm_tb %>%
     )
 ```
 
-Let's have a look at the boxplots.
+Now we can plot the data. Let's have a look at the boxplots, histograms and density plots. We'll display only the boxplots.
 
-```{r}
+```{r PlotData}
 # Create boxplot for first 100,000 rows, without outliers, split by Dx and Region
 p1 <- tpm_tb %>%
     slice(1:100000) %>%
@@ -337,9 +347,16 @@ p3 <- tpm_tb %>%
 p1
 ```
 
-## Variance Partition Analysis
+## Correlation Analysis
 
-Evaluating the `correlation` among sample variables is an imperative step in our analysis. The presence of `highly correlated` variables can significantly impact the `robustness` of our model, creating unstable estimates of variance fractions. This instability is detrimental as it can obfuscate the identification of the true contributors to expression variation.
+In essence, our objective is not just to recognize the factors contributing to expression variation, but to accurately measure their individual impacts. 
+
+Understanding these relationships will allow us to develop a more accurate and reliable predictive model. 
+
+Thus, evaluating the `correlation` among sample variables is an imperative step in our analysis. 
+
+
+The presence of `highly correlated` variables can significantly **impact** the `robustness` of our model, creating **unstable estimates** of variance fractions. 
 
 ```{css, echo=FALSE}
 <style>
@@ -355,18 +372,15 @@ font-family: sans-serif;
 </style>
 <p class="comment">
 ❓ ***Why assessing  correlation is so important?*** 
-When two or more variables are highly correlated, they essentially contain `redundant information`. This redundancy can lead to what is known as `multicollinearity`, a situation that can greatly `destabilize` our model, potentially leading to misleading or erroneous results.
+When two or more variables are highly correlated, meaning that one can be linearly predicted from the others with a substantial degree of accuracy, they essentially contain `redundant information`. This redundancy can lead to what is known as `multicollinearity`, a situation that can greatly reduce the performance of the model and lead to overfitting.
 
 Therefore, assessing correlation enables us to `prevent multicollinearity`, ensuring a more accurate and reliable analysis.
 </p>
 ```
 
-In essence, our objective is not just to recognize the factors contributing to expression variation, but to accurately measure their individual impacts. 
-Understanding these relationships will allow us to develop a more accurate and reliable predictive model. 
+Let's first unlist RIN, mitoMapped and totalAssignedGene to make it possible to work with these variables.
 
-Let's first unlist RIN, mitoMapped and totalAssignedGene .
-
-```{r}
+```{r unlistData}
 colData(rse_tx)$RIN <- as.numeric(unlist(colData(rse_tx)$RIN))
 colData(rse_tx)$mitoMapped <- unlist(map(colData(rse_tx)$mitoMapped, 1))
 colData(rse_tx)$totalAssignedGene <- unlist(map(colData(rse_tx)$totalAssignedGene, 1))
@@ -382,16 +396,15 @@ colData(rse_tx)$ERCCsumLogErr <- unlist(map(colData(rse_tx)$ERCCsumLogErr, 1))
 ```
 
 
-We'll be using the `canCorPairs` function from the variancePartition which performs canonical correlation analysis (CCA) between pairs of variables.
+We'll be using the `canCorPairs()` from the `variancePartition` package which performs canonical correlation analysis (CCA) between pairs of variables.
 
-
-In the context of the `variancePartition` package, the `canCorPairs()` computes the canonical correlations between each pair of variables specified in the formula argument.
+In the context of the `variancePartition` package, the `canCorPairs()` computes the `canonical correlations` between each pair of variables specified in the formula argument.
 
 <div class="alert alert-info">
   <strong>Note:</strong> canCorPairs returns correlation values between 0 and 1. Canonical Correlation Analysis (CCA) returns sqrt(mean(rho^2)), which is the fraction of the maximum possible correlation. When comparing a two vectors, or a vector and a matrix, this gives the save value as the absolute correlation. When comparing two sets of categorical variables, this is equivalent to Cramer's V statistic.
 </div>
 
-```{r}
+```{r PlotHeatmap}
 formula <- ~ Dx + RIN + Age + Sex + Race + mitoMapped + overallMapRate + mitoRate + rRNA_rate + concordMapRate + totalMapped + totalAssignedGene + Region
 correlation_matrix <- canCorPairs(formula, colData(rse_tx))
 
@@ -422,17 +435,17 @@ Heatmap(correlation_matrix,
 
 The `cell_fun` function customizes the display of each cell in the heatmap by adding the correlation value as text inside the cell with a specific format and font size.
 
-From the heatmap we can see that there's a high correlation between `mitoMapped` and `totalAssignedGene`. 
+From the heatmap we can see that there's a high correlation between `mitoMapped` and `totalAssignedGene`. We can't say if it's a positive or negative correlation since it's an  absolute correlation. 
 
 <div class="alert alert-info">
-  <strong>Note:</strong> One of the strategies to address multicollinearity is removing some of the highly correlated independent variables.
+  <strong>Note:</strong> One of the strategies to address multicollinearity is removing some of the highly correlated independent variables. So we have to keep `mitoMapped` or `totalAssignedGene` in our model. 
 </div>
 
 # qsvaR: Quality Surrogate Variable Analysis
 
 Here's a general outline of how qSVA can be used to adjust for degradation in postmortem brain tissue:
 
-**Identify Surrogate Variables**: The first step in SVA is to identify surrogate variables that capture the unwanted variation in the data. These variables are often not of primary interest in the study but can significantly affect the results.
+**Identify Surrogate Variables**: The first step in qSVA is to identify surrogate variables that capture the `unwanted variation` in the data. These variables are often not of primary interest in the study but can significantly affect the results.
 
 **Estimate the Effect of Surrogate Variables**: The next step is to estimate the effect of the surrogate variables on the data. This is typically done using a statistical model that includes the surrogate variables as covariates. The coefficients for the surrogate variables in this model represent their effect on the data.
 
@@ -440,11 +453,11 @@ Here's a general outline of how qSVA can be used to adjust for degradation in po
 
 **Perform the Primary Analysis on the Adjusted Data**: Once the data has been adjusted for the effect of the surrogate variables, the primary analysis can be performed on the adjusted data. This analysis should yield results that are not confounded by the unwanted variation due to degradation.
 
-## Degradation transcripts
+## Get the degradation transcripts
 
-After loading the `rse_tx` object we subset for the transcripts associated with degradation. 
+One of the first steps of the `qSVA` is to get the degradation transcripts to estimate their effects. 
 
-In qsvaR there are three models to choose from. Here the names `cell_component`, `top1500`, and `standard` refer to models that were determined to be effective in removing degradation effects.
+We'll need to choose one of the three models to get those transcripts. Here the names `cell_component`, `top1500`, and `standard` refer to models that were determined to be effective in removing degradation effects.
 
 ## qsvaR models
 
@@ -458,13 +471,15 @@ The `top1500` model is the same as the "standard" model except the union of the 
 
 ### The cell component model
 
-The `cell_component` model, involved `deconvolution` of the degradation matrix to determine the proportion of cell types within our studied tissue. These proportions were then added to our `model.matrix()` and the union of the top 1000 transcripts in the interaction model, the main effect model, and the cell proportions model were used to generate this model of qSVs. It's the most effective of our models.
+The `cell_component` model, involved `deconvolution` of the degradation matrix to determine the proportion of cell types within our studied tissue. These proportions were then added to our `model.matrix()` and the union of the top 1000 transcripts in the interaction model, the main effect model, and the cell proportions model were used to generate this model of qSVs. **It's the most effective of our models**.
 
 ## Run qSVA
 
+After loading the `rse_tx` object we subset for the transcripts associated with degradation. 
+
 In this example we will choose `cell_component` when using the `getDegTx()` and `select_transcripts()` functions. `getDegTx()` is used to select a specific set of transcripts from a given experiment, and provides a warning if the mean expression level of these transcripts is low.
 
-```{r}
+```{r GetDegTx}
 ## Next we get the degraded transcripts for qSVA from the "cell_component"
 ## model
 DegTx <- getDegTx(rse_tx, type = "cell_component")
@@ -473,13 +488,13 @@ dim(DegTx)
 
 The `getPCs()` applies PCA using the `prcomp` function.
 
-```{r}
+```{r GetPCs}
 ## Now we can compute the Principal Components (PCs) of the degraded transcripts
 pcTx <- getPCs(DegTx, "tpm")
 head(pcTx$x)[, 1:10]
 ```
 
-We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, DegTx, a RangedSummarizedExperiment object, is used as the rse_tx input.
+We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, `DegTx`, a `RangedSummarizedExperiment` object, is used as the `rse_tx` input.
 
 <div class="alert alert-info">
   <strong>Note:</strong> The model.matrix() function takes a formula and a data frame (or similar object) and returns the design matrix.
@@ -498,9 +513,9 @@ The tilde (~) can be read as `is modeled as`. The variables on the right side of
 
 In this case, Dx, Age, Sex, Race, and Region are your `predictors`.
 
-data = colData(rse_tx): This argument tells R which dataset to use for creating the design matrix. 
+Let's understand this step by step:
 
-```{r}
+```{r Modelmatrix}
 # Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.
 mod <- model.matrix(~ Dx + Age + Sex + Race + Region,
     data = colData(rse_tx)
@@ -512,7 +527,7 @@ colnames(mod)
 
 The `k_qsvs()` function is employed to determine the required number of Principal Components (PCs) needed to capture the underlying variation in our data.
 
-```{r}
+```{r kQsvs}
 # Get the number of qsvs
 set.seed(20230703)
 k <- k_qsvs(DegTx, mod, "tpm")
@@ -521,7 +536,7 @@ print(k)
 
 You can simplify the process by utilizing our integrated function, `qSVA`. This wrapper function conveniently combines all previously mentioned functions, streamlining the analysis into a single step.
 
-```{r}
+```{r qSVA}
 ## Example use of the wrapper function qSVA()
 set.seed(20230703)
 qsva_pcs_cc <- qSVA(rse_tx, type = "cell_component", mod = mod, assayname = "tpm")
@@ -530,27 +545,11 @@ dim(qsva_pcs_cc)
 
 ## Differential Expression using limma
 
-`limma` fits a so-called linear model. The limma User's Guide from the limma webpage.
+Before jumping to the differential expression analysis we have to add the qSVs to our statistical model by using the `cbind()`. 
 
-In the context of limma, each gene's expression level is modeled as a linear combination of the experimental factors, with some added noise or error term.
+`mod_qSVA` includes both our original model and the qSVs. The qSVs adjust for the degradation effect.
 
-For example, consider a simple model for one gene:
-
-$expression = intercept + beta*treatment + error$
-
-Here:
-
-**expression** is the expression level of the gene.
-
-**intercept** is the base level of gene expression (i.e., in the control group).
-
-**beta** is a coefficient representing the effect size of the treatment.
-
-**treatment** is a variable representing whether the sample is a control or treatment (often coded as 0 for control, 1 for treatment).
-
-**error** is the noise or unexplained variability in gene expression.
-
-```{r}
+```{r AddqSVs}
 ## Add the qSVs to our statistical model
 mod_qSVA <- cbind(
     mod,
@@ -558,9 +557,18 @@ mod_qSVA <- cbind(
 )
 ```
 
-`mod_qSVA` includes both our original model and the qSVs. The qSVs adjust for the degradation effect.
+`limma` fits a so-called linear model. The limma User's Guide from the limma webpage.
 
-```{r}
+In the context of limma, each gene's expression level is modeled as a linear combination of the experimental factors, with some added noise or error term.
+
+The `lmFit()` function fits a separate linear model to each gene (or transcript, in this case), and the result (fitTx) is an object that contains the fitted model coefficients and other statistics for each gene.
+
+After fitting the model, `eBayes()` is used to compute `empirical Bayes statistics` for differential expression. The function applies a shrinkage technique to the standard errors, improving the stability of the estimates, particularly when the number of samples is small. 
+
+The object eBTx that results from the `eBayes()` call is a fitted model object that contains several components, including `coefficients`, `standard errors`, `t-statistics`, `p-values`, and more.
+
+The steps are the following:
+```{r LimmaDEA}
 ## Extract the transcript expression values and put them in the
 ## log2(TPM + 1) scale
 txExprs <- log2(assays(rse_tx)$tpm + 0.5)
@@ -570,27 +578,29 @@ fitTx <- lmFit(txExprs, mod_qSVA)
 eBTx <- eBayes(fitTx)
 ```
 
-In this part above of the code, we are running a linear model for differential expression analysis using the `lmFit()` from the limma package in R. 
+In this part above of the code, we are running a linear model for differential expression analysis using the `lmFit()` from the `limma` package in R. 
 
 The function takes two main arguments: the matrix of expression values (txExprs) and the design matrix (mod_qSVA). 
 
 The design matrix specifies the linear model that you're fitting to the data. In this case, mod_qSVA likely includes the variables of interest and the qSVs.
 
-The `lmFit()` function fits a separate linear model to each gene (or transcript, in this case), and the result (fitTx) is an object that contains the fitted model coefficients and other statistics for each gene.
+<div class="alert alert-info">
+  <strong>Note:</strong> The `colnames(eBTx)` function will return the names of the columns of the coefficients matrix in the eBTx object. Each column of this matrix corresponds to a coefficient in the linear model, which in turn corresponds to a comparison of interest in your experiment.
+</div>
 
-After fitting the model, `eBayes()` is used to compute `empirical Bayes statistics` for differential expression. The function applies a shrinkage technique to the standard errors, improving the stability of the estimates, particularly when the number of samples is small. 
-
-```{r}
+```{r Getcomp}
+# Get the comparison names from the fitted model 'eBTx'
 colnames(eBTx)
 ```
 
-Let's do the differential expression analysis.
+Let's extract the differential expression results.
 
-```{r}
+```{r topTable}
 ## Extract the differential expression results
 sigTx <- topTable(eBTx,
-    coef = "DxSchizo",
-    p.value = 1, number = nrow(rse_tx)
+    coef = "DxSchizo", # test for differential expression with respect to the "DxSchizo" coefficient.
+    p.value = 1, # all genes will be returned, regardless of their p-values
+    number = nrow(rse_tx) # all genes to be returned
 )
 ```
 
@@ -598,7 +608,7 @@ sigTx <- topTable(eBTx,
 
 Let's explore the top results.
 
-```{r}
+```{r topResults}
 ## Explore the top results
 head(sigTx)
 ```
@@ -637,13 +647,13 @@ Here's a breakdown of what each column in this output represents:
 
 ## Differential expression quality or DEqual plots
 
-This R function, `DEqual`, is designed to compare degradation t-statistics with the t-statistics from a differential expression (DE) analysis. 
+This R function, `DEqual`, is designed to compare `degradation t-statistics` with the `t-statistics` from a differential expression (DE) analysis. 
 
 It takes as input a data frame (DE) containing differential expression results, such as those outputted by the limma package's topTable function. 
 
 The function identifies the transcripts that are common between the `DE dataframe` and `degradation_tstats` from the qsvaR package and creates a new dataframe, common_data, which contains the `degradation t-statistics` and `DE t-statistics` for the common transcripts.
 
-```{r}
+```{r DEqualwith}
 ## Generate a DEqual() plot using the model results with qSVs
 DEqual(sigTx)
 ```
@@ -658,7 +668,7 @@ In this plot:
 
 For comparison, here is the DEqual() plot for the model without qSVs.
 
-```{r}
+```{r DEqualwithout}
 ## Generate a DEqual() plot using the model results without qSVs
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
@@ -666,9 +676,9 @@ DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, num
 
 The results from the differential expression analysis without qSVA normalization are shown in the two DEqual plots. The contrast between the two plots is evident and reveals the effectiveness of degradation effect removal.
 
-In the first plot, the correlation stands at **-0.038**, suggesting a minimal relationship between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
+In the first plot, the correlation stands at **-0.038**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
 
-Conversely, the second plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce confounding factors in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
+Conversely, the second plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
 
 <div class="alert alert-info">
   <strong>Note:</strong> In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
@@ -689,6 +699,18 @@ The `r Biocpkg("qsvaRPkgDemo")` package `r Citep(bib[["qsvaRPkgDemo"]])` was mad
 * `r CRANpkg("rmarkdown")` `r Citep(bib[["rmarkdown"]])`
 * `r CRANpkg("sessioninfo")` `r Citep(bib[["sessioninfo"]])`
 * `r CRANpkg("testthat")` `r Citep(bib[["testthat"]])`
+* `r Biocpkg("SummarizedExperiment")` `r Citep(bib[["SummarizedExperiment"]])`
+* `r Biocpkg("tidySummarizedExperiment")` `r Citep(bib[["tidySummarizedExperiment"]])`
+* `r CRANpkg("tidyverse")` `r Citep(bib[["tidyverse"]])`
+* `r CRANpkg("variancePartition")` `r Citep(bib[["variancePartition"]])`
+* `r CRANpkg("ComplexHeatmap")` `r Citep(bib[["ComplexHeatmap"]])`
+* `r CRANpkg("colorRamp2")` `r Citep(bib[["colorRamp2"]])`
+* `r Biocpkg("limma")` `r Citep(bib[["limma"]])`
+* `r CRANpkg("ggplot2")` `r Citep(bib[["ggplot2"]])`
+* `r CRANpkg("dplyr")` `r Citep(bib[["dplyr"]])`
+* `r CRANpkg("purrr")` `r Citep(bib[["purrr"]])`
+* `r Githubpkg("jaffelab")` `r Citep(bib[["jaffelab"]])`
+* `r Biocpkg("qsvaR")` `r Citep(bib[["qsvaR"]])`
 
 
 This package was developed using `r BiocStyle::Biocpkg("biocthis")`.
@@ -742,3 +764,5 @@ Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
 ## Print bibliography
 PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
 ```
+
+
