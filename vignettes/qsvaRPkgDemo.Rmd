@@ -181,7 +181,8 @@ rse_tx
 
 This is a `SummarizedExperiment` object but it is evaluated as a tibble. So it is fully compatible both with `SummarizedExperiment` and tidyverse APIs.
 
-## SummarizedExperiment
+## Background
+### SummarizedExperiment
 
 The `SummarizedExperiment` package contains two classes: `SummarizedExperiment` and `RangedSummarizedExperiment`.
 
@@ -197,56 +198,56 @@ The following graphic displays the class geometry and highlights the vertical (c
 
 ![RangedSummarizedExperiment](figs/rse_object.png){width=400%}
 
-## Sample Information
+### Sample Information
 
 The sample information in `colData(rse_tx)` contains the following main variables:
 
-`SAMPLE_ID` : is the name of the sample.
+- `SAMPLE_ID` : is the name of the sample.
 
-`ERCCsumLogErr` : a summary statistic quantifying overall difference of expected and actual ERCC concentrations for one sample. 
+- `ERCCsumLogErr` : a summary statistic quantifying overall difference of expected and actual ERCC concentrations for one sample. 
 
-`numReads` : Total number of reads in fastq file.
+- `numReads` : Total number of reads in fastq file.
 
-`numMapped` :	Number of reads that were aligned by HISAT2 to the reference genome.
+- `numMapped` :	Number of reads that were aligned by HISAT2 to the reference genome.
 
-`numUnmapped` :	Number of reads that did not align to the reference genome.
+- `numUnmapped` :	Number of reads that did not align to the reference genome.
 
-`overallMapRate` : Proportion of total reads mapped (numMapped / numReads).
+- `overallMapRate` : Proportion of total reads mapped (numMapped / numReads).
 
-`concordMapRate` : If library is paired-end, percentage of read pairs that mapped concordantly.
+- `concordMapRate` : If library is paired-end, percentage of read pairs that mapped concordantly.
 
-`overallMapRate`: the decimal fraction of reads which successfully mapped to the reference genome (i.e.numMapped/numReads). 
+- `overallMapRate`: the decimal fraction of reads which successfully mapped to the reference genome (i.e.numMapped/numReads). 
 
-`totalMapped`: the number of reads which successfully mapped to the canonical sequences in the reference genome (excluding mitochondrial chromosomes).
+- `totalMapped`: the number of reads which successfully mapped to the canonical sequences in the reference genome (excluding mitochondrial chromosomes).
 
-`mitoMapped`: the number of reads which successfully mapped to the mitochondrial chromosome. 
+- `mitoMapped`: the number of reads which successfully mapped to the mitochondrial chromosome. 
 
-`mitoRate` : the decimal fraction of reads which mapped to the mitochondrial chromosome, of those which map at all (i.e.mitoMapped/ (totalMapped+mitoMapped)).
+- `mitoRate` : the decimal fraction of reads which mapped to the mitochondrial chromosome, of those which map at all (i.e.mitoMapped/ (totalMapped+mitoMapped)).
 
-`totalAssignedGene` : the decimal fraction of reads assigned unambiguously to a gene (including mitochondrial genes), with featureCounts of those in total.
+- `totalAssignedGene` : the decimal fraction of reads assigned unambiguously to a gene (including mitochondrial genes), with featureCounts of those in total.
 
-`rRNA_rate` : the decimal fraction of reads assigned to a gene whose type is 'rRNA', of those assigned to any gene.
+- `rRNA_rate` : the decimal fraction of reads assigned to a gene whose type is 'rRNA', of those assigned to any gene.
 
-`RNum` : stands for Sample ID.
+- `RNum` : is the identifier for the RNAseq experiment and is related to the Sample ID.
 
-`BrNum` : stands for Brain Number. It likely refers to a unique identifier assigned to each brain (or brain sample) examined in the study.
+- `BrNum` : stands for Brain Number. It likely refers to a unique identifier assigned to each brain (or brain sample) examined in the study.
 
-`Region` : refers to a specific region of the brain from which the sample was taken.
+- `Region` : refers to a specific region of the brain from which the sample was taken.
 
-`RIN` : refers to RNA Integrity Number. It's a measure of the quality of the RNA samples used in the study. A higher RIN indicates higher quality, and thus more reliable, RNA.
+- `RIN` : refers to RNA Integrity Number. It's a measure of the quality of the RNA samples used in the study. A higher RIN indicates higher quality, and thus more reliable, RNA.
 
-`Age` : refers to the age of the donors from which the samples were taken.
+- `Age` : refers to the age of the donors from which the samples were taken.
 
-`Sex` : refers to the sex of the donors from which the samples were taken. if the sample comes from a female (F) or a male (M) donor.
+- `Sex` : refers to the sex of the donors from which the samples were taken. if the sample comes from a female (F) or a male (M) donor.
 
-`Race` : refers to the race of the donors from which the samples were taken.
+- `Race` : refers to the race of the donors from which the samples were taken.
 
-`Dx` : refers to the diagnosis of the donors from which the samples were taken.
+- `Dx` : refers to the diagnosis of the donors from which the samples were taken.
 
 
-## Data normalization
+### Data normalization
 
-The `rse_tx` object contains the following `Transcripts Per Million (TPM)` or `tpm` normalized assays:
+We would like to use the `Transcripts Per Million (TPM)` or `tpm` data. The `rse_tx` object contains the following `tpm` normalized assays:
 
 ```{r, eval=FALSE}
 assays(rse_tx)
@@ -278,7 +279,7 @@ assays(rse_tx) %>%
     head()
 ```
 
-## Data distribution
+### Data distribution
 
 Let's have a look at the distribution of the `tpm` assay.
 Before we have to reformat the data as follows:
@@ -347,7 +348,7 @@ p3 <- tpm_tb %>%
 p1
 ```
 
-## Correlation Analysis
+### Correlation Analysis
 
 In essence, our objective is not just to recognize the factors contributing to expression variation, but to accurately measure their individual impacts. 
 
@@ -441,7 +442,8 @@ From the heatmap we can see that there's a high correlation between `mitoMapped`
   <strong>Note:</strong> One of the strategies to address multicollinearity is removing some of the highly correlated independent variables. So we have to keep `mitoMapped` or `totalAssignedGene` in our model. 
 </div>
 
-# qsvaR: Quality Surrogate Variable Analysis
+# Analysis 
+## qsvaR: Quality Surrogate Variable Analysis 
 
 Here's a general outline of how qSVA can be used to adjust for degradation in postmortem brain tissue:
 
@@ -449,31 +451,31 @@ Here's a general outline of how qSVA can be used to adjust for degradation in po
 
 **Estimate the Effect of Surrogate Variables**: The next step is to estimate the effect of the surrogate variables on the data. This is typically done using a statistical model that includes the surrogate variables as covariates. The coefficients for the surrogate variables in this model represent their effect on the data.
 
-**Adjust the Data for the Effect of Surrogate Variables**: Once the effect of the surrogate variables has been estimated, this effect can be removed from the data. This is typically done by subtracting the estimated effect of the surrogate variables from the data. The resulting adjusted data should be free of the unwanted variation due to degradation.
+**Adjust the Data for the Effect of Surrogate Variables in the DE analysis**: Once the effect of the surrogate variables has been estimated, this effect can be removed from the data. This is typically done by subtracting the estimated effect of the surrogate variables from the data. The resulting adjusted data should be free of the unwanted variation due to degradation.
 
 **Perform the Primary Analysis on the Adjusted Data**: Once the data has been adjusted for the effect of the surrogate variables, the primary analysis can be performed on the adjusted data. This analysis should yield results that are not confounded by the unwanted variation due to degradation.
 
-## Get the degradation transcripts
+### Get the degradation transcripts
 
 One of the first steps of the `qSVA` is to get the degradation transcripts to estimate their effects. 
 
 We'll need to choose one of the three models to get those transcripts. Here the names `cell_component`, `top1500`, and `standard` refer to models that were determined to be effective in removing degradation effects.
 
-## qsvaR models
+### qsvaR models
 
-### The standard model
+#### The standard model
 
 The `standard` model involves taking the union of the `top 1000` transcripts associated with degradation from the interaction model and the main effect model.
 
-### The top1500 model
+#### The top1500 model
 
 The `top1500` model is the same as the "standard" model except the union of the `top 1500` genes associated with degradation is selected.
 
-### The cell component model
+#### The cell component model
 
 The `cell_component` model, involved `deconvolution` of the degradation matrix to determine the proportion of cell types within our studied tissue. These proportions were then added to our `model.matrix()` and the union of the top 1000 transcripts in the interaction model, the main effect model, and the cell proportions model were used to generate this model of qSVs. **It's the most effective of our models**.
 
-## Run qSVA
+### Run qSVA 
 
 After loading the `rse_tx` object we subset for the transcripts associated with degradation. 
 
@@ -534,6 +536,8 @@ k <- k_qsvs(DegTx, mod, "tpm")
 print(k)
 ```
 
+### Run qSVA using the qSVA wrapper function
+
 You can simplify the process by utilizing our integrated function, `qSVA`. This wrapper function conveniently combines all previously mentioned functions, streamlining the analysis into a single step.
 
 ```{r qSVA}
@@ -557,7 +561,7 @@ mod_qSVA <- cbind(
 )
 ```
 
-`limma` fits a so-called linear model. The limma User's Guide from the limma webpage.
+`limma` fits a so-called linear model. [Here](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) the limma User's Guide from the limma bioconductor webpage.
 
 In the context of limma, each gene's expression level is modeled as a linear combination of the experimental factors, with some added noise or error term.
 
@@ -570,7 +574,7 @@ The object eBTx that results from the `eBayes()` call is a fitted model object t
 The steps are the following:
 ```{r LimmaDEA}
 ## Extract the transcript expression values and put them in the
-## log2(TPM + 1) scale
+## log2(TPM + 0.5) scale
 txExprs <- log2(assays(rse_tx)$tpm + 0.5)
 
 ## Run the standard linear model for differential expression
@@ -582,7 +586,7 @@ In this part above of the code, we are running a linear model for differential e
 
 The function takes two main arguments: the matrix of expression values (txExprs) and the design matrix (mod_qSVA). 
 
-The design matrix specifies the linear model that you're fitting to the data. In this case, mod_qSVA likely includes the variables of interest and the qSVs.
+The design matrix specifies the linear model that you're fitting to the data. In this case, mod_qSVA includes the variables of interest and the qSVs.
 
 <div class="alert alert-info">
   <strong>Note:</strong> The `colnames(eBTx)` function will return the names of the columns of the coefficients matrix in the eBTx object. Each column of this matrix corresponds to a coefficient in the linear model, which in turn corresponds to a comparison of interest in your experiment.
@@ -647,16 +651,11 @@ Here's a breakdown of what each column in this output represents:
 
 ## Differential expression quality or DEqual plots
 
-This R function, `DEqual`, is designed to compare `degradation t-statistics` with the `t-statistics` from a differential expression (DE) analysis. 
+This R function, `DEqual`, is designed to compare `degradation t-statistics` with the `t-statistics` from a differential expression (DE) analysis in the human brain tissue. 
 
 It takes as input a data frame (DE) containing differential expression results, such as those outputted by the limma package's topTable function. 
 
 The function identifies the transcripts that are common between the `DE dataframe` and `degradation_tstats` from the qsvaR package and creates a new dataframe, common_data, which contains the `degradation t-statistics` and `DE t-statistics` for the common transcripts.
-
-```{r DEqualwith}
-## Generate a DEqual() plot using the model results with qSVs
-DEqual(sigTx)
-```
 
 In this plot:
 
@@ -666,27 +665,35 @@ In this plot:
 
 **Bright yellow bins**: These colors represent bins with a high number of data points. If a bin is bright yellow, it means there are many transcripts with those particular DE and degradation t-statistics.
 
-For comparison, here is the DEqual() plot for the model without qSVs.
-
 ```{r DEqualwithout}
 ## Generate a DEqual() plot using the model results without qSVs
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
-<br>
 
-The results from the differential expression analysis without qSVA normalization are shown in the two DEqual plots. The contrast between the two plots is evident and reveals the effectiveness of degradation effect removal.
-
-In the first plot, the correlation stands at **-0.038**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
-
-Conversely, the second plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
+The first plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
 
 <div class="alert alert-info">
-  <strong>Note:</strong> In essence, the high correlation in the second plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
+  <strong>Note:</strong> In essence, the high correlation in the first plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
 </div>
+
+For comparison, here is the DEqual() plot for the model with qSVs.
+
+```{r DEqualwith}
+## Generate a DEqual() plot using the model results with qSVs
+DEqual(sigTx)
+```
+
+<br>
+
+Conversely, in the second plot, the correlation stands at **-0.038**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
 
 # Conclusion
 
-From these findings, it can be concluded that adjusting for degradation in postmortem human brain tissue is critical in the analysis of differential gene expression data to effectively remove degradation effects. 
+In this workshop, we gained insights and practical knowledge on how to adjust for degradation in postmortem human brain tissue.
+
+The results from the differential expression analysis with and without qSVA normalization shown in the two DEqual plots reveals the effectiveness of degradation effect removal.
+
+The use of the qSVA effectively removes degradation effects. 
 
 # Reproducibility
 
