@@ -614,7 +614,7 @@ transcripts from a given experiment, and provides a warning if the mean
 expression level of these transcripts is low.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Subset the rse_tx object by DLPFC region</span></span>
-<span><span class="va">rse_tx</span> <span class="op">=</span> <span class="va">rse_tx</span><span class="op">[</span>, <span class="va">rse_tx</span><span class="op">$</span><span class="va">Region</span><span class="op">==</span><span class="st">"DLPFC"</span><span class="op">]</span></span>
+<span><span class="va">rse_tx</span> <span class="op">&lt;-</span> <span class="va">rse_tx</span><span class="op">[</span>, <span class="va">rse_tx</span><span class="op">$</span><span class="va">Region</span> <span class="op">==</span> <span class="st">"DLPFC"</span><span class="op">]</span></span>
 <span><span class="co">## Next we get the degraded transcripts for qSVA from the "cell_component" model</span></span>
 <span><span class="va">DegTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="external-link">getDegTx</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">DegTx</span><span class="op">)</span></span>
@@ -664,7 +664,7 @@ features).</p>
 <p>Let’s understand this step by step:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.</span></span>
-<span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span><span class="op">)</span></span>
+<span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">Dx</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Race</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -997,9 +997,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-26 19:10:34 UTC"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-26 19:13:35 UTC"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 1.364 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 1.422 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
