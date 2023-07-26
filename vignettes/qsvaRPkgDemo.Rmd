@@ -167,11 +167,10 @@ For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript
 
 ## Load the data
 
-The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented by Lieber collegues at the [BioC2023](http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html)
+The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented by Lieber collegues at the [BioC2023](https://bioc2023.bioconductor.org/abstracts/paper24/)
 
 ```{r loadData}
 options(timeout = 400)
-memory.limit(size = 56000)
 ## Load the rse_tx object
 load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = T)
 
