@@ -613,31 +613,32 @@ functions. <code><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="ex
 transcripts from a given experiment, and provides a warning if the mean
 expression level of these transcripts is low.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Next we get the degraded transcripts for qSVA from the "cell_component"</span></span>
-<span><span class="co">## model</span></span>
+<code class="sourceCode R"><span><span class="co">## Subset the rse_tx object by DLPFC region</span></span>
+<span><span class="va">rse_tx</span> <span class="op">&lt;-</span> <span class="va">rse_tx</span><span class="op">[</span>, <span class="va">rse_tx</span><span class="op">$</span><span class="va">Region</span> <span class="op">==</span> <span class="st">"DLPFC"</span><span class="op">]</span></span>
+<span><span class="co">## Next we get the degraded transcripts for qSVA from the "cell_component" model</span></span>
 <span><span class="va">DegTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="external-link">getDegTx</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">DegTx</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2976  900</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2976  453</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/pkg/qsvaR/man/getPCs.html" class="external-link">getPCs()</a></code> applies PCA using the <code>prcomp</code>
 function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Now we can compute the Principal Components (PCs) of the degraded transcripts</span></span>
 <span><span class="va">pcTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/getPCs.html" class="external-link">getPCs</a></span><span class="op">(</span><span class="va">DegTx</span>, <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pcTx</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
-<span><span class="co">#&gt;               PC1       PC2        PC3        PC4        PC5        PC6</span></span>
-<span><span class="co">#&gt; R10424 -20.659438 7.9637675  -4.828472 17.2108401 -5.0581402  8.2623866</span></span>
-<span><span class="co">#&gt; R12195   1.174567 2.1863270  -9.775701  3.5658286 -1.1826089  2.3970804</span></span>
-<span><span class="co">#&gt; R12198  11.993004 1.0481054 -12.253723  4.8569224  0.4069927  0.5299095</span></span>
-<span><span class="co">#&gt; R12199  11.179790 1.7420421 -13.288738  5.2699068  0.4773046  3.3469337</span></span>
-<span><span class="co">#&gt; R12200 -18.301492 3.2010989  -0.126475  7.4569122 -2.9512052 -0.5801785</span></span>
-<span><span class="co">#&gt; R12258   4.166616 0.6041488  -4.987586  0.9757591 11.6405818  4.3369447</span></span>
-<span><span class="co">#&gt;              PC7       PC8        PC9       PC10</span></span>
-<span><span class="co">#&gt; R10424  1.321221 -1.808477  5.4520795 -0.5415210</span></span>
-<span><span class="co">#&gt; R12195 -4.613346  4.650102  2.8022180  0.7460759</span></span>
-<span><span class="co">#&gt; R12198  4.341520 -3.972343  0.8805966 -0.7144335</span></span>
-<span><span class="co">#&gt; R12199 -1.505125  1.008122  3.3264594  2.6494604</span></span>
-<span><span class="co">#&gt; R12200 -3.112759  6.192132  7.6013546  4.6718215</span></span>
-<span><span class="co">#&gt; R12258 -0.528728 -9.687213 -2.4068896  1.0984762</span></span></code></pre></div>
+<span><span class="co">#&gt;               PC1       PC2        PC3       PC4       PC5        PC6       PC7</span></span>
+<span><span class="co">#&gt; R10424 -18.609350  5.654972 -10.521455 11.383754 -5.720547 11.1699710 -4.914021</span></span>
+<span><span class="co">#&gt; R12195   4.238017 -3.434001  -5.301963  0.755135 -3.632545  5.0044620  2.355794</span></span>
+<span><span class="co">#&gt; R12198  15.009249 -6.268986  -6.003985  4.821451 -1.488256  1.3719040 -5.349268</span></span>
+<span><span class="co">#&gt; R12199  14.392927 -6.370502  -6.480586  3.787386 -4.982039  4.7914737 -1.066185</span></span>
+<span><span class="co">#&gt; R12200 -15.654543  2.845852  -2.273977  3.961545  2.944993  9.3164761  1.634647</span></span>
+<span><span class="co">#&gt; R12258   7.109071 -4.316821   7.151549  5.239148 -7.744696 -0.9355408 -1.879552</span></span>
+<span><span class="co">#&gt;               PC8         PC9       PC10</span></span>
+<span><span class="co">#&gt; R10424 -0.1833597  0.02920567 -1.6005800</span></span>
+<span><span class="co">#&gt; R12195 -5.5289264 -1.96673143 -0.1303645</span></span>
+<span><span class="co">#&gt; R12198  2.8738392 -0.64170546 -1.3889163</span></span>
+<span><span class="co">#&gt; R12199 -2.7378677  2.26850143  1.8711155</span></span>
+<span><span class="co">#&gt; R12200 -9.1117425 -2.32982944  3.6057435</span></span>
+<span><span class="co">#&gt; R12258  8.1395165 -2.19594082 -0.7708335</span></span></code></pre></div>
 <p>We use a model matrix that accounts for relevant variables (Charity
 et al., 2020). We include variables such as Age, Sex, Race, and Region
 in this model. Our dataset, <code>DegTx</code>, a
@@ -663,14 +664,15 @@ features).</p>
 <p>Let’s understand this step by step:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">Dx</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Race</span> <span class="op">+</span> <span class="va">Region</span>,</span>
+<span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">Dx</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Race</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># check the names of the columns in the mod matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"     </span></span>
-<span><span class="co">#&gt; [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO"</span></span></code></pre></div>
+<span><span class="co">#&gt; [6] "RaceCAUC"    "RaceHISP"</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/pkg/qsvaR/man/k_qsvs.html" class="external-link">k_qsvs()</a></code> function is employed to determine the
 required number of Principal Components (PCs) needed to capture the
 underlying variation in our data.</p>
@@ -679,7 +681,7 @@ underlying variation in our data.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20230703</span><span class="op">)</span></span>
 <span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/k_qsvs.html" class="external-link">k_qsvs</a></span><span class="op">(</span><span class="va">DegTx</span>, <span class="va">mod</span>, <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">k</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 34</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 25</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="run-qsva-using-the-qsva-wrapper-function">Run qSVA using the qSVA wrapper function<a class="anchor" aria-label="anchor" href="#run-qsva-using-the-qsva-wrapper-function"></a>
@@ -693,7 +695,7 @@ step.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20230703</span><span class="op">)</span></span>
 <span><span class="va">qsva_pcs_cc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/qSVA.html" class="external-link">qSVA</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span>, mod <span class="op">=</span> <span class="va">mod</span>, assayname <span class="op">=</span> <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">qsva_pcs_cc</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 900  34</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 453  25</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -732,7 +734,6 @@ fitted model object that contains several components, including
 <code class="sourceCode R"><span><span class="co">## Extract the transcript expression values and put them in the</span></span>
 <span><span class="co">## log2(TPM + 0.5) scale</span></span>
 <span><span class="va">txExprs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">$</span><span class="va">tpm</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co">## Run the standard linear model for differential expression</span></span>
 <span><span class="va">fitTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit</a></span><span class="op">(</span><span class="va">txExprs</span>, <span class="va">mod_qSVA</span><span class="op">)</span></span>
 <span><span class="va">eBTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="va">fitTx</span><span class="op">)</span></span></code></pre></div>
@@ -755,14 +756,12 @@ your experiment.</p>
 <code class="sourceCode R"><span><span class="co"># Get the comparison names from the fitted model 'eBTx'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">eBTx</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"     </span></span>
-<span><span class="co">#&gt;  [6] "RaceCAUC"    "RaceHISP"    "RegionHIPPO" "qSV1"        "qSV2"       </span></span>
-<span><span class="co">#&gt; [11] "qSV3"        "qSV4"        "qSV5"        "qSV6"        "qSV7"       </span></span>
-<span><span class="co">#&gt; [16] "qSV8"        "qSV9"        "qSV10"       "qSV11"       "qSV12"      </span></span>
-<span><span class="co">#&gt; [21] "qSV13"       "qSV14"       "qSV15"       "qSV16"       "qSV17"      </span></span>
-<span><span class="co">#&gt; [26] "qSV18"       "qSV19"       "qSV20"       "qSV21"       "qSV22"      </span></span>
-<span><span class="co">#&gt; [31] "qSV23"       "qSV24"       "qSV25"       "qSV26"       "qSV27"      </span></span>
-<span><span class="co">#&gt; [36] "qSV28"       "qSV29"       "qSV30"       "qSV31"       "qSV32"      </span></span>
-<span><span class="co">#&gt; [41] "qSV33"       "qSV34"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [6] "RaceCAUC"    "RaceHISP"    "qSV1"        "qSV2"        "qSV3"       </span></span>
+<span><span class="co">#&gt; [11] "qSV4"        "qSV5"        "qSV6"        "qSV7"        "qSV8"       </span></span>
+<span><span class="co">#&gt; [16] "qSV9"        "qSV10"       "qSV11"       "qSV12"       "qSV13"      </span></span>
+<span><span class="co">#&gt; [21] "qSV14"       "qSV15"       "qSV16"       "qSV17"       "qSV18"      </span></span>
+<span><span class="co">#&gt; [26] "qSV19"       "qSV20"       "qSV21"       "qSV22"       "qSV23"      </span></span>
+<span><span class="co">#&gt; [31] "qSV24"       "qSV25"</span></span></code></pre></div>
 <p>Let’s extract the differential expression results.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Extract the differential expression results</span></span>
@@ -778,20 +777,20 @@ specific term.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Explore the top results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sigTx</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                         logFC   AveExpr         t      P.Value    adj.P.Val</span></span>
-<span><span class="co">#&gt; ENST00000553142.5 -0.07856532 1.8375128 -5.990119 3.080853e-09 0.0006102954</span></span>
-<span><span class="co">#&gt; ENST00000552074.5 -0.14813543 2.2715574 -5.303696 1.444403e-07 0.0143063075</span></span>
-<span><span class="co">#&gt; ENST00000373510.8  0.04836527 1.0493713  5.106990 4.033212e-07 0.0266317021</span></span>
-<span><span class="co">#&gt; ENST00000510632.1  0.12184169 0.4263786  4.981105 7.643443e-07 0.0322151740</span></span>
-<span><span class="co">#&gt; ENST00000530589.1 -0.11715403 2.2714701 -4.968773 8.131326e-07 0.0322151740</span></span>
-<span><span class="co">#&gt; ENST00000549117.5 -0.11552746 1.9281660 -4.910548 1.087037e-06 0.0358890854</span></span>
-<span><span class="co">#&gt;                           B</span></span>
-<span><span class="co">#&gt; ENST00000553142.5 10.519940</span></span>
-<span><span class="co">#&gt; ENST00000552074.5  6.817471</span></span>
-<span><span class="co">#&gt; ENST00000373510.8  5.833975</span></span>
-<span><span class="co">#&gt; ENST00000510632.1  5.222922</span></span>
-<span><span class="co">#&gt; ENST00000530589.1  5.163833</span></span>
-<span><span class="co">#&gt; ENST00000549117.5  4.886725</span></span></code></pre></div>
+<span><span class="co">#&gt;                         logFC    AveExpr         t      P.Value adj.P.Val</span></span>
+<span><span class="co">#&gt; ENST00000509833.1 -0.19793326  1.6039735 -4.984710 9.075361e-07 0.1797765</span></span>
+<span><span class="co">#&gt; ENST00000206423.7 -0.05451499  1.1566859 -4.765995 2.590207e-06 0.2005694</span></span>
+<span><span class="co">#&gt; ENST00000596272.5  0.14845134 -0.6480373  4.732048 3.037503e-06 0.2005694</span></span>
+<span><span class="co">#&gt; ENST00000518335.2  0.09767838 -0.5550917  4.631073 4.851566e-06 0.2221915</span></span>
+<span><span class="co">#&gt; ENST00000553503.5 -0.30153792  1.0366885 -4.582705 6.053531e-06 0.2221915</span></span>
+<span><span class="co">#&gt; ENST00000416708.1  0.07597952 -0.9207563  4.559409 6.729914e-06 0.2221915</span></span>
+<span><span class="co">#&gt;                          B</span></span>
+<span><span class="co">#&gt; ENST00000509833.1 5.237794</span></span>
+<span><span class="co">#&gt; ENST00000206423.7 4.243017</span></span>
+<span><span class="co">#&gt; ENST00000596272.5 4.092195</span></span>
+<span><span class="co">#&gt; ENST00000518335.2 3.649307</span></span>
+<span><span class="co">#&gt; ENST00000553503.5 3.440212</span></span>
+<span><span class="co">#&gt; ENST00000416708.1 3.340211</span></span></code></pre></div>
 <p>Here’s a breakdown of what each column in this output represents:</p>
 <ul>
 <li><p><strong>logFC (Log Fold Change)</strong>: This represents the
@@ -996,9 +995,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-26 14:13:23 EDT"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-26 15:09:29 EDT"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 12.946 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 5.404 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
