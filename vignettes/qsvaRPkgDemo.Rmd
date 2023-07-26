@@ -486,7 +486,7 @@ In this example we will choose `cell_component` when using the `getDegTx()` and 
 
 ```{r GetDegTx}
 ## Subset the rse_tx object by DLPFC region
-rse_tx = rse_tx[, rse_tx$Region=="DLPFC"]
+rse_tx <- rse_tx[, rse_tx$Region == "DLPFC"]
 ## Next we get the degraded transcripts for qSVA from the "cell_component" model
 DegTx <- getDegTx(rse_tx, type = "cell_component")
 dim(DegTx)
@@ -523,7 +523,7 @@ Let's understand this step by step:
 
 ```{r Modelmatrix}
 # Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.
-rse_tx$Dx = as.factor(rse_tx$Dx)
+rse_tx$Dx <- as.factor(rse_tx$Dx)
 mod <- model.matrix(~ Dx + Age + Sex + Race,
     data = colData(rse_tx)
 )
