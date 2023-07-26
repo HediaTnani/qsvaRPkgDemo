@@ -15,6 +15,7 @@ author:
       email: lcolladotor@gmail.com
 output: 
   BiocStyle::html_document:
+    number_sections: true
     self_contained: yes
     toc: true
     toc_float: true
@@ -669,10 +670,11 @@ In this plot:
 
 ```{r DEqualwithout}
 ## Generate a DEqual() plot using the model results without qSVs
+set.seed(20230703)
 DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
 ```
 
-The first plot reveals a correlation of **0.5** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
+The first plot reveals a correlation of **0.48** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
 
 <div class="alert alert-info">
   <strong>Note:</strong> In essence, the high correlation in the first plot could be masking the true differential gene expression between the case-control groups by mingling the degradation signal into the expression data. This emphasizes the need for adequate normalization, such as qSVA, to reduce such confounding factors and ensure a more accurate representation of the biological differences in gene expression.
@@ -682,12 +684,13 @@ For comparison, here is the DEqual() plot for the model with qSVs.
 
 ```{r DEqualwith}
 ## Generate a DEqual() plot using the model results with qSVs
+set.seed(20230703)
 DEqual(sigTx)
 ```
 
 <br>
 
-Conversely, in the second plot, the correlation stands at **-0.038**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
+Conversely, in the second plot, the correlation stands at **-0.0019**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
 
 # Conclusion
 
