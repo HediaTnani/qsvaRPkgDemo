@@ -39,7 +39,7 @@ env:
   run_pkgdown: 'true'
   has_RUnit: 'false'
   cache-version: 'cache-v1'
-  run_docker: 'false'
+  run_docker: 'true'
 
 jobs:
   build-check:
@@ -245,8 +245,7 @@ jobs:
               dir('check', 'tar.gz$', full.names = TRUE),
               `quit-with-status` = TRUE,
               `no-check-R-ver` = TRUE,
-              `no-check-bioc-help` = TRUE,
-              `no-check-bioc-views` = TRUE
+              `no-check-bioc-help` = TRUE
           )
         shell: Rscript {0}
 
