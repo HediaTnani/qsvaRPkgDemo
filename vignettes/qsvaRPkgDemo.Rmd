@@ -523,7 +523,8 @@ Let's understand this step by step:
 
 ```{r Modelmatrix}
 # Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.
-mod <- model.matrix(~ Dx + Age + Sex + Race + Region,
+rse_tx$Dx = as.factor(rse_tx$Dx)
+mod <- model.matrix(~ Dx + Age + Sex + Race,
     data = colData(rse_tx)
 )
 
