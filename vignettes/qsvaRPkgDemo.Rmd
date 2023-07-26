@@ -485,8 +485,9 @@ After loading the `rse_tx` object we subset for the transcripts associated with 
 In this example we will choose `cell_component` when using the `getDegTx()` and `select_transcripts()` functions. `getDegTx()` is used to select a specific set of transcripts from a given experiment, and provides a warning if the mean expression level of these transcripts is low.
 
 ```{r GetDegTx}
-## Next we get the degraded transcripts for qSVA from the "cell_component"
-## model
+## Subset the rse_tx object by DLPFC region
+rse_tx = rse_tx[, rse_tx$Region=="DLPFC"]
+## Next we get the degraded transcripts for qSVA from the "cell_component" model
 DegTx <- getDegTx(rse_tx, type = "cell_component")
 dim(DegTx)
 ```
@@ -579,7 +580,6 @@ The steps are the following:
 ## Extract the transcript expression values and put them in the
 ## log2(TPM + 0.5) scale
 txExprs <- log2(assays(rse_tx)$tpm + 0.5)
-
 ## Run the standard linear model for differential expression
 fitTx <- lmFit(txExprs, mod_qSVA)
 eBTx <- eBayes(fitTx)
