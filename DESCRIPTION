@@ -6,6 +6,7 @@ Authors@R:
     person("Hedia", "Tnani", , "hediatnani0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0380-9740"))
 Description: This is a qsvaR package demo for the BioC2023 conference. 
+It explains the differential expression analysis using Limma and qsvaR.
 License: Artistic-2.0
 URL: https://github.com/HediaTnani/qsvaRPkgDemo
 BugReports: https://support.bioconductor.org/tag/qsvaRPkgDemo
