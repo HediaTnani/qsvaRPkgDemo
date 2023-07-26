@@ -172,7 +172,7 @@ The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarized
 ```{r loadData}
 options(timeout = 400)
 ## Load the rse_tx object
-load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = T)
+load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = TRUE)
 
 ## General overview of the object
 rse_tx
