@@ -78,9 +78,9 @@ biocthis::use_bioc_vignette(pkg, "Differential Expression Analysis using Limma a
 
 ## Add a Bioconductor-friendly GitHub actions workflow to check your package
 biocthis::use_bioc_github_action(
-  pkgdown = TRUE,
-  testthat = TRUE,
-  docker = TRUE
+    pkgdown = TRUE,
+    testthat = TRUE,
+    docker = TRUE
 )
 ## You will need to go to https://github.com//settings/actions
 ## to and enable:

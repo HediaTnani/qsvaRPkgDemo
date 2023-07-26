@@ -65,22 +65,22 @@ bib <- c(
     limma = citation("limma")[1],
     variancePartition = citation("variancePartition")[1],
     qsvaR = citation("qsvaR")[1],
-    Jaffe2017= RefManageR::BibEntry(
-      "article",
-      key = "Jaffe2017",   
-      author = " A. E. Jaffe and R. Tao and  A. L.  Norris and M. Kealhofer  and A. Nellore and J. H. Shin and K. Dewey and J. Yankai  and M. Hyde Thomas  and Joel E. Kleinman and Richard E. Straub and Jeffrey T. Leek and Daniel R. Weinberger",
-      doi = "10.1073/pnas.1617384114",
-      issn = "10916490",
-      issue = "27",
-      journal = "Proceedings of the National Academy of Sciences of the United States of America",
-      keywords = "Differential expression analysis,RNA quality,RNA sequencing,Statistical modeling",
-      month = "7",
-      pages = "7130-7135",
-      pmid = "28634288",
-      publisher = "National Academy of Sciences",
-      title = "QSVA framework for RNA quality correction in differential expression analysis",
-      volume = "114",
-      year = "2017"
+    Jaffe2017 = RefManageR::BibEntry(
+        "article",
+        key = "Jaffe2017",
+        author = " A. E. Jaffe and R. Tao and  A. L.  Norris and M. Kealhofer  and A. Nellore and J. H. Shin and K. Dewey and J. Yankai  and M. Hyde Thomas  and Joel E. Kleinman and Richard E. Straub and Jeffrey T. Leek and Daniel R. Weinberger",
+        doi = "10.1073/pnas.1617384114",
+        issn = "10916490",
+        issue = "27",
+        journal = "Proceedings of the National Academy of Sciences of the United States of America",
+        keywords = "Differential expression analysis,RNA quality,RNA sequencing,Statistical modeling",
+        month = "7",
+        pages = "7130-7135",
+        pmid = "28634288",
+        publisher = "National Academy of Sciences",
+        title = "QSVA framework for RNA quality correction in differential expression analysis",
+        volume = "114",
+        year = "2017"
     ),
     ColladoTorres2019 = RefManageR::BibEntry("article",
         key = "ColladoTorres2019",
@@ -111,7 +111,14 @@ bib <- c(
         title = "A guide to creating design matrices for gene expression experiments",
         volume = "9",
         year = "2020"
-))
+    )
+)
+```
+
+```{r, echo=FALSE, message=FALSE, include = FALSE}
+Citep(bib[["Jaffe2017"]])
+Citep(bib[["ColladoTorres2019"]])
+Citep(bib[["Law2020"]])
 ```
 
 # Introduction
@@ -163,8 +170,8 @@ For illustrative purposes, we'll use the BrainSeq Phase 2 data at the transcript
 The BrainSeq Phase 2 data at the transcript level resides in a `RangedSummarizedExperiment` (RSE) object called `rse_tx`. It has been obtained after running the `SPEAQeasy` pipeline. To have a better understanding of how the pipeline works please attend the workshop that will be presented at the [BioC2023](http://research.libd.org/SPEAQeasyWorkshop2023/articles/SPEAQeasyWorkshop2023.html)
 
 ```{r}
-options(timeout=400)
-memory.limit(size=56000) 
+options(timeout = 400)
+memory.limit(size = 56000)
 ## Load the rse_tx object
 load(url("https://s3.us-east-2.amazonaws.com/libd-brainseq2/rse_tx_unfiltered.Rdata"), verbose = T)
 
@@ -258,15 +265,16 @@ assays(rse_tx)$tpm
 # The first() function extracts the first element of the simplified result
 assays(rse_tx) %>%
     simplify() %>%
-    first() %>% head() 
+    first() %>%
+    head()
 ```
 
 ## Data distribution
 
 Let's have a look at the distribution of the `tpm` assay.
 
-```{r, eval=FALSE}
-options(timeout=400)
+```{r}
+options(timeout = 400)
 # Transform 'tpm' data to a long format with 'Transcript', 'Sample', and 'TPM' columns
 tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
     as.data.frame() %>%
@@ -298,7 +306,7 @@ mean_tpm <- tpm_tb %>%
 
 Let's have a look at the boxplots.
 
-```{r, eval=FALSE}
+```{r}
 # Create boxplot for first 100,000 rows, without outliers, split by Dx and Region
 p1 <- tpm_tb %>%
     slice(1:100000) %>%
@@ -306,7 +314,7 @@ p1 <- tpm_tb %>%
     geom_boxplot(outlier.shape = NA) +
     facet_wrap(~Region) +
     theme_minimal() +
-    labs(title = "Boxplot of TPM for Each Dx by Region",  x = "Dx", y = "log2(TPM)+0.5")
+    labs(title = "Boxplot of TPM for Each Dx by Region", x = "Dx", y = "log2(TPM)+0.5")
 
 # Create a histogram of TPM for each Dx
 p2 <- tpm_tb %>%
@@ -468,7 +476,7 @@ The `getPCs()` applies PCA using the `prcomp` function.
 ```{r}
 ## Now we can compute the Principal Components (PCs) of the degraded transcripts
 pcTx <- getPCs(DegTx, "tpm")
-head(pcTx$x)[,1:10]
+head(pcTx$x)[, 1:10]
 ```
 
 We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, DegTx, a RangedSummarizedExperiment object, is used as the rse_tx input.
