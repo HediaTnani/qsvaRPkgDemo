@@ -231,8 +231,11 @@ evaluated as a tibble. So it is fully compatible both with
 <code>SummarizedExperiment</code> and tidyverse APIs.</p>
 </div>
 <div class="section level3">
-<h3 id="summarizedexperiment">SummarizedExperiment<a class="anchor" aria-label="anchor" href="#summarizedexperiment"></a>
+<h3 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h3>
+<div class="section level4">
+<h4 id="summarizedexperiment">SummarizedExperiment<a class="anchor" aria-label="anchor" href="#summarizedexperiment"></a>
+</h4>
 <p>The <code>SummarizedExperiment</code> package contains two classes:
 <code>SummarizedExperiment</code> and
 <code>RangedSummarizedExperiment</code>.</p>
@@ -257,65 +260,69 @@ vertical (column) and horizontal (row) relationships.</p>
 <img src="figs/rse_object.png" style="width:400.0%" alt="RangedSummarizedExperiment"><div class="figcaption">RangedSummarizedExperiment</div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="sample-information">Sample Information<a class="anchor" aria-label="anchor" href="#sample-information"></a>
-</h3>
+<div class="section level4">
+<h4 id="sample-information">Sample Information<a class="anchor" aria-label="anchor" href="#sample-information"></a>
+</h4>
 <p>The sample information in <code>colData(rse_tx)</code> contains the
 following main variables:</p>
-<p><code>SAMPLE_ID</code> : is the name of the sample.</p>
-<p><code>ERCCsumLogErr</code> : a summary statistic quantifying overall
-difference of expected and actual ERCC concentrations for one
-sample.</p>
-<p><code>numReads</code> : Total number of reads in fastq file.</p>
-<p><code>numMapped</code> : Number of reads that were aligned by HISAT2
-to the reference genome.</p>
-<p><code>numUnmapped</code> : Number of reads that did not align to the
-reference genome.</p>
-<p><code>overallMapRate</code> : Proportion of total reads mapped
-(numMapped / numReads).</p>
-<p><code>concordMapRate</code> : If library is paired-end, percentage of
-read pairs that mapped concordantly.</p>
-<p><code>overallMapRate</code>: the decimal fraction of reads which
+<ul>
+<li><p><code>SAMPLE_ID</code> : is the name of the sample.</p></li>
+<li><p><code>ERCCsumLogErr</code> : a summary statistic quantifying
+overall difference of expected and actual ERCC concentrations for one
+sample.</p></li>
+<li><p><code>numReads</code> : Total number of reads in fastq
+file.</p></li>
+<li><p><code>numMapped</code> : Number of reads that were aligned by
+HISAT2 to the reference genome.</p></li>
+<li><p><code>numUnmapped</code> : Number of reads that did not align to
+the reference genome.</p></li>
+<li><p><code>overallMapRate</code> : Proportion of total reads mapped
+(numMapped / numReads).</p></li>
+<li><p><code>concordMapRate</code> : If library is paired-end,
+percentage of read pairs that mapped concordantly.</p></li>
+<li><p><code>overallMapRate</code>: the decimal fraction of reads which
 successfully mapped to the reference genome
-(i.e.numMapped/numReads).</p>
-<p><code>totalMapped</code>: the number of reads which successfully
+(i.e.numMapped/numReads).</p></li>
+<li><p><code>totalMapped</code>: the number of reads which successfully
 mapped to the canonical sequences in the reference genome (excluding
-mitochondrial chromosomes).</p>
-<p><code>mitoMapped</code>: the number of reads which successfully
-mapped to the mitochondrial chromosome.</p>
-<p><code>mitoRate</code> : the decimal fraction of reads which mapped to
-the mitochondrial chromosome, of those which map at all (i.e.mitoMapped/
-(totalMapped+mitoMapped)).</p>
-<p><code>totalAssignedGene</code> : the decimal fraction of reads
+mitochondrial chromosomes).</p></li>
+<li><p><code>mitoMapped</code>: the number of reads which successfully
+mapped to the mitochondrial chromosome.</p></li>
+<li><p><code>mitoRate</code> : the decimal fraction of reads which
+mapped to the mitochondrial chromosome, of those which map at all
+(i.e.mitoMapped/ (totalMapped+mitoMapped)).</p></li>
+<li><p><code>totalAssignedGene</code> : the decimal fraction of reads
 assigned unambiguously to a gene (including mitochondrial genes), with
-featureCounts of those in total.</p>
-<p><code>rRNA_rate</code> : the decimal fraction of reads assigned to a
-gene whose type is ‘rRNA’, of those assigned to any gene.</p>
-<p><code>RNum</code> : stands for Sample ID.</p>
-<p><code>BrNum</code> : stands for Brain Number. It likely refers to a
-unique identifier assigned to each brain (or brain sample) examined in
-the study.</p>
-<p><code>Region</code> : refers to a specific region of the brain from
-which the sample was taken.</p>
-<p><code>RIN</code> : refers to RNA Integrity Number. It’s a measure of
-the quality of the RNA samples used in the study. A higher RIN indicates
-higher quality, and thus more reliable, RNA.</p>
-<p><code>Age</code> : refers to the age of the donors from which the
-samples were taken.</p>
-<p><code>Sex</code> : refers to the sex of the donors from which the
+featureCounts of those in total.</p></li>
+<li><p><code>rRNA_rate</code> : the decimal fraction of reads assigned
+to a gene whose type is ‘rRNA’, of those assigned to any gene.</p></li>
+<li><p><code>RNum</code> : is the identifier for the RNAseq experiment
+and is related to the Sample ID.</p></li>
+<li><p><code>BrNum</code> : stands for Brain Number. It likely refers to
+a unique identifier assigned to each brain (or brain sample) examined in
+the study.</p></li>
+<li><p><code>Region</code> : refers to a specific region of the brain
+from which the sample was taken.</p></li>
+<li><p><code>RIN</code> : refers to RNA Integrity Number. It’s a measure
+of the quality of the RNA samples used in the study. A higher RIN
+indicates higher quality, and thus more reliable, RNA.</p></li>
+<li><p><code>Age</code> : refers to the age of the donors from which the
+samples were taken.</p></li>
+<li><p><code>Sex</code> : refers to the sex of the donors from which the
 samples were taken. if the sample comes from a female (F) or a male (M)
-donor.</p>
-<p><code>Race</code> : refers to the race of the donors from which the
-samples were taken.</p>
-<p><code>Dx</code> : refers to the diagnosis of the donors from which
-the samples were taken.</p>
+donor.</p></li>
+<li><p><code>Race</code> : refers to the race of the donors from which
+the samples were taken.</p></li>
+<li><p><code>Dx</code> : refers to the diagnosis of the donors from
+which the samples were taken.</p></li>
+</ul>
 </div>
-<div class="section level3">
-<h3 id="data-normalization">Data normalization<a class="anchor" aria-label="anchor" href="#data-normalization"></a>
-</h3>
-<p>The <code>rse_tx</code> object contains the following
-<code>Transcripts Per Million (TPM)</code> or <code>tpm</code>
-normalized assays:</p>
+<div class="section level4">
+<h4 id="data-normalization">Data normalization<a class="anchor" aria-label="anchor" href="#data-normalization"></a>
+</h4>
+<p>We would like to use the <code>Transcripts Per Million (TPM)</code>
+or <code>tpm</code> data. The <code>rse_tx</code> object contains the
+following <code>tpm</code> normalized assays:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span></span></code></pre></div>
 <p><code>tpm</code>: normalized read counts of the 19,8093 genes across
@@ -346,9 +353,9 @@ of them:</p>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="data-distribution">Data distribution<a class="anchor" aria-label="anchor" href="#data-distribution"></a>
-</h3>
+<div class="section level4">
+<h4 id="data-distribution">Data distribution<a class="anchor" aria-label="anchor" href="#data-distribution"></a>
+</h4>
 <p>Let’s have a look at the distribution of the <code>tpm</code> assay.
 Before we have to reformat the data as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -411,11 +418,14 @@ histograms and density plots. We’ll display only the boxplots.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Density Plot of TPM for Each Dx"</span>, x <span class="op">=</span> <span class="st">"log2(TPM)+0.5"</span>, y <span class="op">=</span> <span class="st">"Density"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span></span></code></pre></div>
-<p><img src="qsvaRPkgDemo_files/figure-html/PlotData-1.png" width="700"></p>
+<p>Here the results of the boxplots.</p>
+<div class="float">
+<img src="figs/tpmDistributionRegion.png" style="width:400.0%" alt="Boxplots"><div class="figcaption">Boxplots</div>
 </div>
-<div class="section level3">
-<h3 id="correlation-analysis">Correlation Analysis<a class="anchor" aria-label="anchor" href="#correlation-analysis"></a>
-</h3>
+</div>
+<div class="section level4">
+<h4 id="correlation-analysis">Correlation Analysis<a class="anchor" aria-label="anchor" href="#correlation-analysis"></a>
+</h4>
 <p>In essence, our objective is not just to recognize the factors
 contributing to expression variation, but to accurately measure their
 individual impacts.</p>
@@ -524,35 +534,41 @@ variables. So we have to keep <code>mitoMapped</code> or
 </div>
 </div>
 </div>
+</div>
 <div class="section level2">
-<h2 id="qsvar-quality-surrogate-variable-analysis">qsvaR: Quality Surrogate Variable Analysis<a class="anchor" aria-label="anchor" href="#qsvar-quality-surrogate-variable-analysis"></a>
+<h2 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
 </h2>
+<div class="section level3">
+<h3 id="qsvar-quality-surrogate-variable-analysis">qsvaR: Quality Surrogate Variable Analysis<a class="anchor" aria-label="anchor" href="#qsvar-quality-surrogate-variable-analysis"></a>
+</h3>
 <p>Here’s a general outline of how qSVA can be used to adjust for
 degradation in postmortem brain tissue:</p>
-<p><strong>Identify Surrogate Variables</strong>: The first step in qSVA
-is to identify surrogate variables that capture the
+<ol style="list-style-type: decimal">
+<li><p><strong>Identify Surrogate Variables</strong>: The first step in
+qSVA is to identify surrogate variables that capture the
 <code>unwanted variation</code> in the data. These variables are often
 not of primary interest in the study but can significantly affect the
-results.</p>
-<p><strong>Estimate the Effect of Surrogate Variables</strong>: The next
-step is to estimate the effect of the surrogate variables on the data.
-This is typically done using a statistical model that includes the
+results.</p></li>
+<li><p><strong>Estimate the Effect of Surrogate Variables</strong>: The
+next step is to estimate the effect of the surrogate variables on the
+data. This is typically done using a statistical model that includes the
 surrogate variables as covariates. The coefficients for the surrogate
-variables in this model represent their effect on the data.</p>
-<p><strong>Adjust the Data for the Effect of Surrogate
-Variables</strong>: Once the effect of the surrogate variables has been
-estimated, this effect can be removed from the data. This is typically
-done by subtracting the estimated effect of the surrogate variables from
-the data. The resulting adjusted data should be free of the unwanted
-variation due to degradation.</p>
-<p><strong>Perform the Primary Analysis on the Adjusted Data</strong>:
-Once the data has been adjusted for the effect of the surrogate
-variables, the primary analysis can be performed on the adjusted data.
-This analysis should yield results that are not confounded by the
-unwanted variation due to degradation.</p>
-<div class="section level3">
-<h3 id="get-the-degradation-transcripts">Get the degradation transcripts<a class="anchor" aria-label="anchor" href="#get-the-degradation-transcripts"></a>
-</h3>
+variables in this model represent their effect on the data.</p></li>
+<li><p><strong>Adjust the Data for the Effect of Surrogate Variables in
+the DE analysis</strong>: Once the effect of the surrogate variables has
+been estimated, this effect can be removed from the data. This is
+typically done by subtracting the estimated effect of the surrogate
+variables from the data. The resulting adjusted data should be free of
+the unwanted variation due to degradation.</p></li>
+<li><p><strong>Perform the Primary Analysis on the Adjusted
+Data</strong>: Once the data has been adjusted for the effect of the
+surrogate variables, the primary analysis can be performed on the
+adjusted data. This analysis should yield results that are not
+confounded by the unwanted variation due to degradation.</p></li>
+</ol>
+<div class="section level4">
+<h4 id="get-the-degradation-transcripts">Get the degradation transcripts<a class="anchor" aria-label="anchor" href="#get-the-degradation-transcripts"></a>
+</h4>
 <p>One of the first steps of the <code>qSVA</code> is to get the
 degradation transcripts to estimate their effects.</p>
 <p>We’ll need to choose one of the three models to get those
@@ -560,26 +576,26 @@ transcripts. Here the names <code>cell_component</code>,
 <code>top1500</code>, and <code>standard</code> refer to models that
 were determined to be effective in removing degradation effects.</p>
 </div>
-<div class="section level3">
-<h3 id="qsvar-models">qsvaR models<a class="anchor" aria-label="anchor" href="#qsvar-models"></a>
-</h3>
 <div class="section level4">
-<h4 id="the-standard-model">The standard model<a class="anchor" aria-label="anchor" href="#the-standard-model"></a>
+<h4 id="qsvar-models">qsvaR models<a class="anchor" aria-label="anchor" href="#qsvar-models"></a>
 </h4>
+<div class="section level5">
+<h5 id="the-standard-model">The standard model<a class="anchor" aria-label="anchor" href="#the-standard-model"></a>
+</h5>
 <p>The <code>standard</code> model involves taking the union of the
 <code>top 1000</code> transcripts associated with degradation from the
 interaction model and the main effect model.</p>
 </div>
-<div class="section level4">
-<h4 id="the-top1500-model">The top1500 model<a class="anchor" aria-label="anchor" href="#the-top1500-model"></a>
-</h4>
+<div class="section level5">
+<h5 id="the-top1500-model">The top1500 model<a class="anchor" aria-label="anchor" href="#the-top1500-model"></a>
+</h5>
 <p>The <code>top1500</code> model is the same as the “standard” model
 except the union of the <code>top 1500</code> genes associated with
 degradation is selected.</p>
 </div>
-<div class="section level4">
-<h4 id="the-cell-component-model">The cell component model<a class="anchor" aria-label="anchor" href="#the-cell-component-model"></a>
-</h4>
+<div class="section level5">
+<h5 id="the-cell-component-model">The cell component model<a class="anchor" aria-label="anchor" href="#the-cell-component-model"></a>
+</h5>
 <p>The <code>cell_component</code> model, involved
 <code>deconvolution</code> of the degradation matrix to determine the
 proportion of cell types within our studied tissue. These proportions
@@ -589,9 +605,9 @@ and the cell proportions model were used to generate this model of qSVs.
 <strong>It’s the most effective of our models</strong>.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="run-qsva">Run qSVA<a class="anchor" aria-label="anchor" href="#run-qsva"></a>
-</h3>
+<div class="section level4">
+<h4 id="run-qsva">Run qSVA<a class="anchor" aria-label="anchor" href="#run-qsva"></a>
+</h4>
 <p>After loading the <code>rse_tx</code> object we subset for the
 transcripts associated with degradation.</p>
 <p>In this example we will choose <code>cell_component</code> when using
@@ -667,6 +683,10 @@ underlying variation in our data.</p>
 <span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/k_qsvs.html" class="external-link">k_qsvs</a></span><span class="op">(</span><span class="va">DegTx</span>, <span class="va">mod</span>, <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">k</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 34</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="run-qsva-using-the-qsva-wrapper-function">Run qSVA using the qSVA wrapper function<a class="anchor" aria-label="anchor" href="#run-qsva-using-the-qsva-wrapper-function"></a>
+</h4>
 <p>You can simplify the process by utilizing our integrated function,
 <code>qSVA</code>. This wrapper function conveniently combines all
 previously mentioned functions, streamlining the analysis into a single
@@ -677,6 +697,7 @@ step.</p>
 <span><span class="va">qsva_pcs_cc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/qSVA.html" class="external-link">qSVA</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span>, mod <span class="op">=</span> <span class="va">mod</span>, assayname <span class="op">=</span> <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">qsva_pcs_cc</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 900  34</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="differential-expression-using-limma">Differential Expression using limma<a class="anchor" aria-label="anchor" href="#differential-expression-using-limma"></a>
@@ -691,8 +712,8 @@ The qSVs adjust for the degradation effect.</p>
 <span>    <span class="va">mod</span>,</span>
 <span>    <span class="va">qsva_pcs_cc</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><code>limma</code> fits a so-called linear model. The limma User’s
-Guide from the limma webpage.</p>
+<p><code>limma</code> fits a so-called linear model. <a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf" class="external-link">Here</a>
+the limma User’s Guide from the limma bioconductor webpage.</p>
 <p>In the context of limma, each gene’s expression level is modeled as a
 linear combination of the experimental factors, with some added noise or
 error term.</p>
@@ -712,7 +733,7 @@ fitted model object that contains several components, including
 <p>The steps are the following:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Extract the transcript expression values and put them in the</span></span>
-<span><span class="co">## log2(TPM + 1) scale</span></span>
+<span><span class="co">## log2(TPM + 0.5) scale</span></span>
 <span><span class="va">txExprs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">$</span><span class="va">tpm</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Run the standard linear model for differential expression</span></span>
@@ -724,8 +745,8 @@ differential expression analysis using the <code><a href="https://rdrr.io/pkg/li
 <p>The function takes two main arguments: the matrix of expression
 values (txExprs) and the design matrix (mod_qSVA).</p>
 <p>The design matrix specifies the linear model that you’re fitting to
-the data. In this case, mod_qSVA likely includes the variables of
-interest and the qSVs.</p>
+the data. In this case, mod_qSVA includes the variables of interest and
+the qSVs.</p>
 <div class="alert alert-info">
 <p><strong>Note:</strong> The <code>colnames(eBTx)</code> function will
 return the names of the columns of the coefficients matrix in the eBTx
@@ -826,7 +847,8 @@ likely to be differentially expressed.</p>
 </h3>
 <p>This R function, <code>DEqual</code>, is designed to compare
 <code>degradation t-statistics</code> with the <code>t-statistics</code>
-from a differential expression (DE) analysis.</p>
+from a differential expression (DE) analysis in the human brain
+tissue.</p>
 <p>It takes as input a data frame (DE) containing differential
 expression results, such as those outputted by the limma package’s
 topTable function.</p>
@@ -835,10 +857,6 @@ topTable function.</p>
 qsvaR package and creates a new dataframe, common_data, which contains
 the <code>degradation t-statistics</code> and
 <code>DE t-statistics</code> for the common transcripts.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Generate a DEqual() plot using the model results with qSVs</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/DEqual.html" class="external-link">DEqual</a></span><span class="op">(</span><span class="va">sigTx</span><span class="op">)</span></span></code></pre></div>
-<p><img src="qsvaRPkgDemo_files/figure-html/DEqualwith-1.png" width="700"></p>
 <p>In this plot:</p>
 <p><strong>Dark purple to blue bins</strong>: These colors represent
 bins with a low number of data points. If a bin is dark purple or blue,
@@ -852,30 +870,19 @@ DE and degradation t-statistics.</p>
 a high number of data points. If a bin is bright yellow, it means there
 are many transcripts with those particular DE and degradation
 t-statistics.</p>
-<p>For comparison, here is the DEqual() plot for the model without
-qSVs.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Generate a DEqual() plot using the model results without qSVs</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/DEqual.html" class="external-link">DEqual</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/toptable.html" class="external-link">topTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit</a></span><span class="op">(</span><span class="va">txExprs</span>, <span class="va">mod</span><span class="op">)</span><span class="op">)</span>, coef <span class="op">=</span> <span class="st">"DxSchizo"</span>, p.value <span class="op">=</span> <span class="fl">1</span>, number <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="qsvaRPkgDemo_files/figure-html/DEqualwithout-1.png" width="700"><br></p>
-<p>The results from the differential expression analysis without qSVA
-normalization are shown in the two DEqual plots. The contrast between
-the two plots is evident and reveals the effectiveness of degradation
-effect removal.</p>
-<p>In the first plot, the correlation stands at <strong>-0.038</strong>,
-suggesting a <code>minimal relationship</code> between degradation and
-the differential expression results. This indicates that the degradation
-effects have been effectively eliminated from the data, leading to a
-cleaner interpretation of the gene expression differences.</p>
-<p>Conversely, the second plot reveals a correlation of
-<strong>0.5</strong> with the degradation experiment, even after
-adjusting for several common variables. Such a high correlation
-underscores the fact that degradation’s signal remains significantly
-intertwined with our data. This can potentially introduce
-<code>confounding factors</code> in our differential expression analysis
-between the schizophrenia (SCZD) and neurotypical control groups.</p>
+<p><img src="qsvaRPkgDemo_files/figure-html/DEqualwithout-1.png" width="700"></p>
+<p>The first plot reveals a correlation of <strong>0.5</strong> with the
+degradation experiment, even after adjusting for several common
+variables. Such a high correlation underscores the fact that
+degradation’s signal remains significantly intertwined with our data.
+This can potentially introduce <code>confounding factors</code> in our
+differential expression analysis between the schizophrenia (SCZD) and
+neurotypical control groups.</p>
 <div class="alert alert-info">
-<p><strong>Note:</strong> In essence, the high correlation in the second
+<p><strong>Note:</strong> In essence, the high correlation in the first
 plot could be masking the true differential gene expression between the
 case-control groups by mingling the degradation signal into the
 expression data. This emphasizes the need for adequate normalization,
@@ -883,15 +890,30 @@ such as qSVA, to reduce such confounding factors and ensure a more
 accurate representation of the biological differences in gene
 expression.</p>
 </div>
+<p>For comparison, here is the DEqual() plot for the model with
+qSVs.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Generate a DEqual() plot using the model results with qSVs</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/DEqual.html" class="external-link">DEqual</a></span><span class="op">(</span><span class="va">sigTx</span><span class="op">)</span></span></code></pre></div>
+<p><img src="qsvaRPkgDemo_files/figure-html/DEqualwith-1.png" width="700"></p>
+<p><br></p>
+<p>Conversely, in the second plot, the correlation stands at
+<strong>-0.038</strong>, suggesting a <code>minimal relationship</code>
+between degradation and the differential expression results. This
+indicates that the degradation effects have been effectively eliminated
+from the data, leading to a cleaner interpretation of the gene
+expression differences.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>From these findings, it can be concluded that adjusting for
-degradation in postmortem human brain tissue is critical in the analysis
-of differential gene expression data to effectively remove degradation
-effects.</p>
+<p>In this workshop, we gained insights and practical knowledge on how
+to adjust for degradation in postmortem human brain tissue.</p>
+<p>The results from the differential expression analysis with and
+without qSVA normalization shown in the two DEqual plots reveals the
+effectiveness of degradation effect removal.</p>
+<p>The use of the qSVA effectively removes degradation effects.</p>
 </div>
 <div class="section level2">
 <h2 id="reproducibility">Reproducibility<a class="anchor" aria-label="anchor" href="#reproducibility"></a>
@@ -965,9 +987,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-26 09:20:34 EDT"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-26 12:17:45 EDT"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 16.518 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 13.249 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
