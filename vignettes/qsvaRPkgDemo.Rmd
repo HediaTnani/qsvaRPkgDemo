@@ -264,6 +264,7 @@ assays(rse_tx) %>%
 ## Data distribution
 
 Let's have a look at the distribution of the `tpm` assay.
+First we transform the data to a long format.
 
 ```{r}
 options(timeout=400)
@@ -276,17 +277,29 @@ tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
         names_to = "Sample",
         values_to = "TPM"
     )
+```
 
+Then we extract the data we're interested in from the colData of the `rse_tx` object. 
+
+```{r}
 # Extract 'RNum', 'Region', and 'Dx' from 'rse_tx', convert to tibble
 colData_tb <- colData(rse_tx) %>%
     as.data.frame() %>%
     dplyr::select(RNum, Region, Dx) %>%
     as_tibble()
+```
 
+Finally we join the `tpm` with the metadata. 
+
+```{r}
 # Join 'tpm_tb' with 'colData_tb' based on 'Sample' and 'RNum'
 tpm_tb <- tpm_tb %>%
     dplyr::left_join(colData_tb, by = c("Sample" = "RNum"))
+```
 
+And calculate the mean TPM for each Dx and region. 
+
+```{r}
 # Calculate mean TPM for each Dx and Region
 mean_tpm <- tpm_tb %>%
     group_by(Dx, Region) %>%
