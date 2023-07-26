@@ -284,7 +284,7 @@ assays(rse_tx) %>%
 Let's have a look at the distribution of the `tpm` assay.
 Before we have to reformat the data as follows:
 
-```{r TransformData}
+```{r TransformData, eval=FALSE}
 options(timeout = 400)
 # Transform 'tpm' data to a long format with 'Transcript', 'Sample', and 'TPM' columns
 tpm_tb <- log2(assays(rse_tx)$tpm + 0.5) %>%
@@ -317,7 +317,7 @@ mean_tpm <- tpm_tb %>%
 
 Now we can plot the data. Let's have a look at the boxplots, histograms and density plots. We'll display only the boxplots.
 
-```{r PlotData}
+```{r PlotData, eval=FALSE}
 # Create boxplot for first 100,000 rows, without outliers, split by Dx and Region
 p1 <- tpm_tb %>%
     slice(1:100000) %>%
@@ -347,6 +347,10 @@ p3 <- tpm_tb %>%
 
 p1
 ```
+
+Here the results of the boxplots.
+
+![Boxplots](figs/tpmDistributionRegion.png){width=400%}
 
 ### Correlation Analysis
 
@@ -447,13 +451,13 @@ From the heatmap we can see that there's a high correlation between `mitoMapped`
 
 Here's a general outline of how qSVA can be used to adjust for degradation in postmortem brain tissue:
 
-**Identify Surrogate Variables**: The first step in qSVA is to identify surrogate variables that capture the `unwanted variation` in the data. These variables are often not of primary interest in the study but can significantly affect the results.
+1. **Identify Surrogate Variables**: The first step in qSVA is to identify surrogate variables that capture the `unwanted variation` in the data. These variables are often not of primary interest in the study but can significantly affect the results.
 
-**Estimate the Effect of Surrogate Variables**: The next step is to estimate the effect of the surrogate variables on the data. This is typically done using a statistical model that includes the surrogate variables as covariates. The coefficients for the surrogate variables in this model represent their effect on the data.
+2. **Estimate the Effect of Surrogate Variables**: The next step is to estimate the effect of the surrogate variables on the data. This is typically done using a statistical model that includes the surrogate variables as covariates. The coefficients for the surrogate variables in this model represent their effect on the data.
 
-**Adjust the Data for the Effect of Surrogate Variables in the DE analysis**: Once the effect of the surrogate variables has been estimated, this effect can be removed from the data. This is typically done by subtracting the estimated effect of the surrogate variables from the data. The resulting adjusted data should be free of the unwanted variation due to degradation.
+3. **Adjust the Data for the Effect of Surrogate Variables in the DE analysis**: Once the effect of the surrogate variables has been estimated, this effect can be removed from the data. This is typically done by subtracting the estimated effect of the surrogate variables from the data. The resulting adjusted data should be free of the unwanted variation due to degradation.
 
-**Perform the Primary Analysis on the Adjusted Data**: Once the data has been adjusted for the effect of the surrogate variables, the primary analysis can be performed on the adjusted data. This analysis should yield results that are not confounded by the unwanted variation due to degradation.
+4. **Perform the Primary Analysis on the Adjusted Data**: Once the data has been adjusted for the effect of the surrogate variables, the primary analysis can be performed on the adjusted data. This analysis should yield results that are not confounded by the unwanted variation due to degradation.
 
 ### Get the degradation transcripts
 
