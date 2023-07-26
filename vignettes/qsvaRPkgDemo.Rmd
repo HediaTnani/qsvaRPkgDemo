@@ -383,7 +383,7 @@ Therefore, assessing correlation enables us to `prevent multicollinearity`, ensu
 </p>
 ```
 
-Let's first unlist RIN, mitoMapped and totalAssignedGene to make it possible to work with these variables.
+Let's first unlist many of the variables below to make it possible to work with these variables.
 
 ```{r unlistData}
 colData(rse_tx)$RIN <- as.numeric(unlist(colData(rse_tx)$RIN))
@@ -504,9 +504,9 @@ head(pcTx$x)[, 1:10]
 We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, `DegTx`, a `RangedSummarizedExperiment` object, is used as the `rse_tx` input.
 
 <div class="alert alert-info">
-  <strong>Note:</strong> The model.matrix() function takes a formula and a data frame (or similar object) and returns the design matrix.
+  <strong>Note:</strong> The `model.matrix()` takes a formula and a data frame (or similar object) and returns the design matrix.
   
-model.matrix() will automatically create dummy variables for each level of the factor. Dummy variables are binary (0/1) variables that indicate the presence of a categorical level for each observation.
+`model.matrix()` will automatically create dummy variables for each level of the factor. Dummy variables are binary (0/1) variables that indicate the presence of a categorical level for each observation.
 </div>
 
 The `model.matrix()` takes the variables in the formula format:
@@ -662,11 +662,11 @@ The function identifies the transcripts that are common between the `DE datafram
 
 In this plot:
 
-**Dark purple to blue bins**: These colors represent bins with a low number of data points. If a bin is dark purple or blue, it means there are relatively few transcripts with those particular DE and degradation t-statistics.
+- **Dark purple to blue bins**: These colors represent bins with a low number of data points. If a bin is dark purple or blue, it means there are relatively few transcripts with those particular DE and degradation t-statistics.
 
-**Green to yellow bins**: These colors represent bins with a moderate number of data points. If a bin is green or yellow, it means there are a moderate number of transcripts with those particular DE and degradation t-statistics.
+- **Green to yellow bins**: These colors represent bins with a moderate number of data points. If a bin is green or yellow, it means there are a moderate number of transcripts with those particular DE and degradation t-statistics.
 
-**Bright yellow bins**: These colors represent bins with a high number of data points. If a bin is bright yellow, it means there are many transcripts with those particular DE and degradation t-statistics.
+- **Bright yellow bins**: These colors represent bins with a high number of data points. If a bin is bright yellow, it means there are many transcripts with those particular DE and degradation t-statistics.
 
 ```{r DEqualwithout}
 ## Generate a DEqual() plot using the model results without qSVs
@@ -694,11 +694,11 @@ Conversely, in the second plot, the correlation stands at **-0.0019**, suggestin
 
 # Conclusion
 
-In this workshop, we gained insights and practical knowledge on how to adjust for degradation in postmortem human brain tissue.
+- In this workshop, we gained insights and practical knowledge on how to adjust for degradation in postmortem human brain tissue.
 
-The results from the differential expression analysis with and without qSVA normalization shown in the two DEqual plots reveals the effectiveness of degradation effect removal.
+- The results from the differential expression analysis with and without qSVA normalization shown in the two DEqual plots reveals the effectiveness of degradation effect removal.
 
-The use of the qSVA effectively removes degradation effects. 
+- The use of the qSVA effectively removes degradation effects. 
 
 # Reproducibility
 
@@ -777,4 +777,7 @@ Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
 PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
 ```
 
+# Acknowledgements
+
+- Nicholas J. Eagles: help with the deployment of this workshop package and website
 
