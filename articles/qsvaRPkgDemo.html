@@ -612,15 +612,24 @@ the <code><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="external-
 functions. <code><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="external-link">getDegTx()</a></code> is used to select a specific set of
 transcripts from a given experiment, and provides a warning if the mean
 expression level of these transcripts is low.</p>
+<p>For a matter of simplification we’ll focus on the dorsolateral
+prefrontal cortex (DLPFC) region.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Subset the rse_tx object by DLPFC region</span></span>
 <span><span class="va">rse_tx</span> <span class="op">&lt;-</span> <span class="va">rse_tx</span><span class="op">[</span>, <span class="va">rse_tx</span><span class="op">$</span><span class="va">Region</span> <span class="op">==</span> <span class="st">"DLPFC"</span><span class="op">]</span></span>
 <span><span class="co">## Next we get the degraded transcripts for qSVA from the "cell_component" model</span></span>
 <span><span class="va">DegTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/getDegTx.html" class="external-link">getDegTx</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span><span class="op">)</span></span>
+<span><span class="co">## Get the dimension of the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">DegTx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2976  453</span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/pkg/qsvaR/man/getPCs.html" class="external-link">getPCs()</a></code> applies PCA using the <code>prcomp</code>
 function.</p>
+<p><code>prcomp</code> computes principal components by using the
+<code>singular value decomposition</code> of the (possibly centered
+and/or scaled) data matrix, not by using the covariance matrix. This
+makes it <code>more numerically accurate</code> and can be an advantage
+when dealing with data that suffers from
+<code>multicollinearity</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Now we can compute the Principal Components (PCs) of the degraded transcripts</span></span>
 <span><span class="va">pcTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/getPCs.html" class="external-link">getPCs</a></span><span class="op">(</span><span class="va">DegTx</span>, <span class="st">"tpm"</span><span class="op">)</span></span>
@@ -639,9 +648,18 @@ function.</p>
 <span><span class="co">#&gt; R12199 -2.7378677  2.26850143  1.8711155</span></span>
 <span><span class="co">#&gt; R12200 -9.1117425 -2.32982944  3.6057435</span></span>
 <span><span class="co">#&gt; R12258  8.1395165 -2.19594082 -0.7708335</span></span></code></pre></div>
+<p>The <code>prcomp</code> function in R performs a Principal Component
+Analysis (PCA) and returns a list with several components. Here’s what
+the x component represents:</p>
+<p>x: this component will contain the original data projected onto the
+principal components (also known as scores). This will be a matrix where
+each row corresponds to an observation in the original data and each
+column corresponds to a principal component.</p>
+<p>After the principal component analysis we creates a model matrix for
+regression analysis using a set of predictors.</p>
 <p>We use a model matrix that accounts for relevant variables (Charity
-et al., 2020). We include variables such as Age, Sex, Race, and Region
-in this model. Our dataset, <code>DegTx</code>, a
+et al., 2020). We include variables such as Age, Sex and Race in this
+model. Our dataset, <code>DegTx</code>, a
 <code>RangedSummarizedExperiment</code> object, is used as the
 <code>rse_tx</code> input.</p>
 <div class="alert alert-info">
@@ -653,19 +671,9 @@ for each level of the factor. Dummy variables are binary (0/1) variables
 that indicate the presence of a categorical level for each
 observation.</p>
 </div>
-<p>The <code><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix()</a></code> takes the variables in the formula
-format:</p>
-<p><code>model.matrix([target] ~ [predictor / features], data = [data source])</code></p>
-<p>This part is called a formula:
-<code>~ Dx + Age + Sex + Race + Region</code></p>
-<p>The tilde (~) can be read as <code>is modeled as</code>. The
-variables on the right side of the tilde are the predictor variables (or
-features).</p>
-<p>In this case, Dx, Age, Sex, Race, and Region are your
-<code>predictors</code>.</p>
 <p>Let’s understand this step by step:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.</span></span>
+<code class="sourceCode R"><span><span class="co"># Creates a model matrix for regression analysis using the predictors Dx, Age, Sex and Race from the column data of the rse_tx object.</span></span>
 <span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">$</span><span class="va">Dx</span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="va">Dx</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Race</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span></span>
@@ -675,6 +683,16 @@ features).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "(Intercept)" "DxSchizo"    "Age"         "SexM"        "RaceAS"     </span></span>
 <span><span class="co">#&gt; [6] "RaceCAUC"    "RaceHISP"</span></span></code></pre></div>
+<p>The <code><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix()</a></code> takes the variables in the formula
+format:</p>
+<p><code>model.matrix([target] ~ [predictor / features], data = [data source])</code></p>
+<p>This part is called a formula:
+<code>~ Dx + Age + Sex + Race</code></p>
+<p>The tilde (~) can be read as <code>is modeled as</code>. The
+variables on the right side of the tilde are the predictor variables (or
+features).</p>
+<p>In this case, Dx, Age, Sex and Race are your
+<code>predictors</code>.</p>
 <p>The <code><a href="https://rdrr.io/pkg/qsvaR/man/k_qsvs.html" class="external-link">k_qsvs()</a></code> function is employed to determine the
 required number of Principal Components (PCs) needed to capture the
 underlying variation in our data.</p>
@@ -694,6 +712,7 @@ previously mentioned functions, streamlining the analysis into a single
 step.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Example use of the wrapper function qSVA()</span></span>
+<span><span class="co">## set.seed() (in this case, 20230703) is an integer that R uses to initialize its random number generator</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20230703</span><span class="op">)</span></span>
 <span><span class="va">qsva_pcs_cc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/qSVA.html" class="external-link">qSVA</a></span><span class="op">(</span><span class="va">rse_tx</span>, type <span class="op">=</span> <span class="st">"cell_component"</span>, mod <span class="op">=</span> <span class="va">mod</span>, assayname <span class="op">=</span> <span class="st">"tpm"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">qsva_pcs_cc</span><span class="op">)</span></span>
@@ -724,13 +743,19 @@ object that contains the fitted model coefficients and other statistics
 for each gene.</p>
 <p>After fitting the model, <code><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes()</a></code> is used to compute
 <code>empirical Bayes statistics</code> for differential expression. The
-function applies a shrinkage technique to the standard errors, improving
-the stability of the estimates, particularly when the number of samples
-is small.</p>
+function applies a shrinkage technique to the standard errors,
+<code>improving the stability of the estimates</code>, particularly when
+the <code>number of samples is small</code>.</p>
 <p>The object eBTx that results from the <code><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes()</a></code> call is a
 fitted model object that contains several components, including
 <code>coefficients</code>, <code>standard errors</code>,
 <code>t-statistics</code>, <code>p-values</code>, and more.</p>
+<div class="alert alert-info">
+<p><strong>Note:</strong> Neither <code>TPM</code> nor <code>CPM</code>
+should be fed into edgeR or <code>voom</code>, both expects
+<code>raw counts</code>, as <code>library sizes</code> are used in the
+<code>normalization process</code>.</p>
+</div>
 <p>The steps are the following:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Extract the transcript expression values and put them in the</span></span>
@@ -738,8 +763,7 @@ fitted model object that contains several components, including
 <span><span class="va">txExprs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">$</span><span class="va">tpm</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="co">## Run the standard linear model for differential expression</span></span>
 <span><span class="va">fitTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit</a></span><span class="op">(</span><span class="va">txExprs</span>, <span class="va">mod_qSVA</span><span class="op">)</span></span>
-<span><span class="va">eBTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="va">fitTx</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Zero sample variances detected, have been offset away from zero</span></span></code></pre></div>
+<span><span class="va">eBTx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="va">fitTx</span><span class="op">)</span></span></code></pre></div>
 <p>In this part above of the code, we are running a linear model for
 differential expression analysis using the <code><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit()</a></code> from the
 <code>limma</code> package in R.</p>
@@ -886,8 +910,7 @@ t-statistics.</p></li>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Generate a DEqual() plot using the model results without qSVs</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20230703</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/DEqual.html" class="external-link">DEqual</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/toptable.html" class="external-link">topTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit</a></span><span class="op">(</span><span class="va">txExprs</span>, <span class="va">mod</span><span class="op">)</span><span class="op">)</span>, coef <span class="op">=</span> <span class="st">"DxSchizo"</span>, p.value <span class="op">=</span> <span class="fl">1</span>, number <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Zero sample variances detected, have been offset away from zero</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qsvaR/man/DEqual.html" class="external-link">DEqual</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/toptable.html" class="external-link">topTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/ebayes.html" class="external-link">eBayes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/limma/man/lmFit.html" class="external-link">lmFit</a></span><span class="op">(</span><span class="va">txExprs</span>, <span class="va">mod</span><span class="op">)</span><span class="op">)</span>, coef <span class="op">=</span> <span class="st">"DxSchizo"</span>, p.value <span class="op">=</span> <span class="fl">1</span>, number <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rse_tx</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="qsvaRPkgDemo_files/figure-html/DEqualwithout-1.png" width="700"></p>
 <p>The first plot reveals a correlation of <strong>0.48</strong> with
 the degradation experiment, even after adjusting for several common
@@ -1006,9 +1029,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-27 00:07:06 UTC"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-27 11:22:18 UTC"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 1.389 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 1.505 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
@@ -1327,6 +1350,18 @@ Y. Xie. <em>knitr: A General-Purpose Package for Dynamic Report
 Generation in R</em>. R package version 1.43. 2023. URL:
 <a href="https://yihui.org/knitr/" class="external-link">https://yihui.org/knitr/</a>.</cite>
 </p>
+</div>
+<div class="section level2">
+<h2 id="other-resources">Other resources<a class="anchor" aria-label="anchor" href="#other-resources"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html" class="external-link uri">https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html</a></p></li>
+<li><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7873980/" class="external-link uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7873980/</a></p></li>
+<li><p><a href="https://bioconductor.org/help/course-materials/2019/BSS2019/04_Practical_CoreApproachesInBioconductor.html" class="external-link uri">https://bioconductor.org/help/course-materials/2019/BSS2019/04_Practical_CoreApproachesInBioconductor.html</a></p></li>
+<li><p><a href="https://github.com/jdblischak/dc-bioc-limma/blob/master/analysis/linear-models.Rmd" class="external-link uri">https://github.com/jdblischak/dc-bioc-limma/blob/master/analysis/linear-models.Rmd</a></p></li>
+<li><p><a href="https://carpentries-incubator.github.io/high-dimensional-stats-r/02-high-dimensional-regression/index.html" class="external-link uri">https://carpentries-incubator.github.io/high-dimensional-stats-r/02-high-dimensional-regression/index.html</a></p></li>
+<li><p><a href="https://mlu-explain.github.io/linear-regression/" class="external-link uri">https://mlu-explain.github.io/linear-regression/</a></p></li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
