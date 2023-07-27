@@ -712,7 +712,7 @@ DEqual(sigTx)
 
 <br>
 
-Conversely, in the second plot, the correlation stands at **-0.0019**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the degradation effects have been effectively eliminated from the data, leading to a cleaner interpretation of the gene expression differences.
+Conversely, in the second plot, the correlation stands at **-0.0019**, suggesting a `minimal relationship` between degradation and the differential expression results. This indicates that the **degradation effects have been effectively eliminated from the data**, leading to a cleaner interpretation of the gene expression differences.
 
 # Conclusion
 
