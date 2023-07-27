@@ -496,13 +496,15 @@ categorical variables, this is equivalent to Cramer’s V statistic.</p>
 <span><span class="co"># Create a color function from green to purple</span></span>
 <span><span class="va">color_func</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/colorRamp2/man/colorRamp2.html" class="external-link">colorRamp2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkgreen"</span>, <span class="st">"white"</span>, <span class="st">"purple"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create the heatmap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">correlation_matrix</span>,</span>
+<span></span>
+<span><span class="co"># Create the heatmap object</span></span>
+<span><span class="va">heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="va">correlation_matrix</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"Correlation"</span>, <span class="co"># Title for the color key</span></span>
 <span>    show_row_names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Show row names</span></span>
 <span>    show_column_names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Show column names</span></span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Do not cluster rows</span></span>
 <span>    cluster_columns <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># Do not cluster columns</span></span>
+<span>    column_title <span class="op">=</span> <span class="st">"Correlation heatmap"</span>, <span class="co"># Add title to the heatmap</span></span>
 <span>    cell_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">j</span>, <span class="va">i</span>, <span class="va">x</span>, <span class="va">y</span>, <span class="va">width</span>, <span class="va">height</span>, <span class="va">fill</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid.text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%.2f"</span>, <span class="va">correlation_matrix</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span><span class="op">]</span><span class="op">)</span>, <span class="va">x</span>, <span class="va">y</span>,</span>
 <span>            gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fontsize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
@@ -514,8 +516,10 @@ categorical variables, this is equivalent to Cramer’s V statistic.</p>
 <span>        color_bar <span class="op">=</span> <span class="st">"continuous"</span>, <span class="co"># type of color bar</span></span>
 <span>        legend_direction <span class="op">=</span> <span class="st">"horizontal"</span> <span class="co"># direction of legend</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Correlation heatmap"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Draw the heatmap</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">heatmap</span><span class="op">)</span></span></code></pre></div>
 <p><img src="qsvaRPkgDemo_files/figure-html/PlotHeatmap-1.png" width="700"></p>
 <p>The <code>cell_fun</code> function customizes the display of each
 cell in the heatmap by adding the correlation value as text inside the
@@ -1040,9 +1044,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-27 11:57:44 UTC"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-27 12:21:48 UTC"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 1.378 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 1.411 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
