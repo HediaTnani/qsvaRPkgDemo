@@ -20,7 +20,7 @@ output:
     toc: true
     toc_float: true
     toc_depth: 5
-    code_folding: hide
+    code_folding: show
 date: "`r doc_date()`"
 package: "`r pkg_ver('qsvaRPkgDemo')`"
 vignette: >
@@ -693,7 +693,8 @@ In this plot:
 ```{r DEqualwithout}
 ## Generate a DEqual() plot using the model results without qSVs
 set.seed(20230703)
-DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx)))
+DEqual(topTable(eBayes(lmFit(txExprs, mod)), coef = "DxSchizo", p.value = 1, number = nrow(rse_tx))) +
+ggtitle("DEqual without qSVA")
 ```
 
 The first plot reveals a correlation of **0.48** with the degradation experiment, even after adjusting for several common variables. Such a high correlation underscores the fact that degradation's signal remains significantly intertwined with our data. This can potentially introduce `confounding factors` in our differential expression analysis between the schizophrenia (SCZD) and neurotypical control groups.
@@ -707,7 +708,8 @@ For comparison, here is the DEqual() plot for the model with qSVs.
 ```{r DEqualwith}
 ## Generate a DEqual() plot using the model results with qSVs
 set.seed(20230703)
-DEqual(sigTx)
+DEqual(sigTx) +
+ggtitle("DEqual with qSVA")
 ```
 
 <br>
@@ -716,7 +718,7 @@ Conversely, in the second plot, the correlation stands at **-0.0019**, suggestin
 
 # Conclusion
 
-- In this workshop, we gained insights and practical knowledge on how to adjust for degradation in postmortem human brain tissue.
+- During this workshop, we gained insights and practical knowledge on how to adjust for degradation in postmortem human brain tissue using **qsvaR**.
 
 - The results from the differential expression analysis with and without qSVA normalization shown in the two DEqual plots reveals the effectiveness of degradation effect removal.
 
