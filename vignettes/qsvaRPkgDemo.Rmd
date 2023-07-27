@@ -417,13 +417,15 @@ correlation_matrix <- canCorPairs(formula, colData(rse_tx))
 # Create a color function from green to purple
 color_func <- colorRamp2(c(-1, 0, 1), c("darkgreen", "white", "purple"))
 
-# Create the heatmap
-Heatmap(correlation_matrix,
+
+# Create the heatmap object
+heatmap <- Heatmap(correlation_matrix,
     name = "Correlation", # Title for the color key
     show_row_names = TRUE, # Show row names
     show_column_names = TRUE, # Show column names
     cluster_rows = FALSE, # Do not cluster rows
     cluster_columns = FALSE, # Do not cluster columns
+    column_title = "Correlation heatmap", # Add title to the heatmap
     cell_fun = function(j, i, x, y, width, height, fill) {
         grid.text(sprintf("%.2f", correlation_matrix[i, j]), x, y,
             gp = gpar(fontsize = 10)
@@ -435,8 +437,10 @@ Heatmap(correlation_matrix,
         color_bar = "continuous", # type of color bar
         legend_direction = "horizontal" # direction of legend
     )
-) +
-ggtitle("Correlation heatmap")
+)
+
+# Draw the heatmap
+draw(heatmap)
 ```
 
 The `cell_fun` function customizes the display of each cell in the heatmap by adding the correlation value as text inside the cell with a specific format and font size.
