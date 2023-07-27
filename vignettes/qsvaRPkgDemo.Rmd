@@ -641,7 +641,12 @@ head(sigTx)
 
 Here's a breakdown of what each column in this output represents:
 
-- **logFC (Log Fold Change)**: This represents the log2 fold-change for the differential expression between two conditions. A positive value indicates higher expression in the second condition, while a negative value indicates higher expression in the first condition. For example, a logFC of -0.07856532 for ENST00000553142.5 means this transcript has lower expression in the second condition compared to the first.
+- **logFC (Log Fold Change)**: This represents the log2 fold-change for the differential expression between two conditions. 
+
+<div class="alert alert-info">
+  <strong>Note:</strong> A positive value indicates higher expression in the second condition, while a negative value indicates higher expression in the first condition. For example, a logFC of -0.07856532 for ENST00000553142.5 means this transcript has lower expression in the second condition compared to the first.
+</div>
+
 
 - **AveExpr (Average Expression)**: This is the average log2 expression level of the gene across all samples. It provides a general idea of how abundantly the gene is expressed.
 
