@@ -485,15 +485,20 @@ After loading the `rse_tx` object we subset for the transcripts associated with 
 
 In this example we will choose `cell_component` when using the `getDegTx()` and `select_transcripts()` functions. `getDegTx()` is used to select a specific set of transcripts from a given experiment, and provides a warning if the mean expression level of these transcripts is low.
 
+For a matter of simplification we'll focus on the dorsolateral prefrontal cortex (DLPFC) region. 
+
 ```{r GetDegTx}
 ## Subset the rse_tx object by DLPFC region
 rse_tx <- rse_tx[, rse_tx$Region == "DLPFC"]
 ## Next we get the degraded transcripts for qSVA from the "cell_component" model
 DegTx <- getDegTx(rse_tx, type = "cell_component")
+## Get the dimension of the data
 dim(DegTx)
 ```
 
 The `getPCs()` applies PCA using the `prcomp` function.
+
+`prcomp` computes principal components by using the `singular value decomposition` of the (possibly centered and/or scaled) data matrix, not by using the covariance matrix. This makes it `more numerically accurate` and can be an advantage when dealing with data that suffers from `multicollinearity`.
 
 ```{r GetPCs}
 ## Now we can compute the Principal Components (PCs) of the degraded transcripts
@@ -501,7 +506,13 @@ pcTx <- getPCs(DegTx, "tpm")
 head(pcTx$x)[, 1:10]
 ```
 
-We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex, Race, and Region in this model. Our dataset, `DegTx`, a `RangedSummarizedExperiment` object, is used as the `rse_tx` input.
+The `prcomp` function in R performs a Principal Component Analysis (PCA) and returns a list with several components. Here's what the x component represents:
+
+x: this component will contain the original data projected onto the principal components (also known as scores). This will be a matrix where each row corresponds to an observation in the original data and each column corresponds to a principal component.
+
+After the principal component analysis we creates a model matrix for regression analysis using a set of predictors.
+
+We use a model matrix that accounts for relevant variables `r Citep(bib[["Law2020"]], .opts = list(max.names = 1))`. We include variables such as Age, Sex and Race in this model. Our dataset, `DegTx`, a `RangedSummarizedExperiment` object, is used as the `rse_tx` input.
 
 <div class="alert alert-info">
   <strong>Note:</strong> The `model.matrix()` takes a formula and a data frame (or similar object) and returns the design matrix.
@@ -509,21 +520,10 @@ We use a model matrix that accounts for relevant variables `r Citep(bib[["Law202
 `model.matrix()` will automatically create dummy variables for each level of the factor. Dummy variables are binary (0/1) variables that indicate the presence of a categorical level for each observation.
 </div>
 
-The `model.matrix()` takes the variables in the formula format:
-
-`model.matrix([target] ~ [predictor / features], data = [data source])`
-
-This part is called a formula: 
-`~ Dx + Age + Sex + Race + Region`
-
-The tilde (~) can be read as `is modeled as`. The variables on the right side of the tilde are the predictor variables (or features). 
-
-In this case, Dx, Age, Sex, Race, and Region are your `predictors`.
-
 Let's understand this step by step:
 
 ```{r Modelmatrix}
-# Creates a model matrix for regression analysis using the predictors Dx, Age, Sex, Race, and Region from the column data of the rse_tx object.
+# Creates a model matrix for regression analysis using the predictors Dx, Age, Sex and Race from the column data of the rse_tx object.
 rse_tx$Dx <- as.factor(rse_tx$Dx)
 mod <- model.matrix(~ Dx + Age + Sex + Race,
     data = colData(rse_tx)
@@ -532,6 +532,18 @@ mod <- model.matrix(~ Dx + Age + Sex + Race,
 # check the names of the columns in the mod matrix
 colnames(mod)
 ```
+
+
+The `model.matrix()` takes the variables in the formula format:
+
+`model.matrix([target] ~ [predictor / features], data = [data source])`
+
+This part is called a formula: 
+`~ Dx + Age + Sex + Race`
+
+The tilde (~) can be read as `is modeled as`. The variables on the right side of the tilde are the predictor variables (or features). 
+
+In this case, Dx, Age, Sex and Race are your `predictors`.
 
 The `k_qsvs()` function is employed to determine the required number of Principal Components (PCs) needed to capture the underlying variation in our data.
 
@@ -548,6 +560,7 @@ You can simplify the process by utilizing our integrated function, `qSVA`. This 
 
 ```{r qSVA}
 ## Example use of the wrapper function qSVA()
+## set.seed() (in this case, 20230703) is an integer that R uses to initialize its random number generator
 set.seed(20230703)
 qsva_pcs_cc <- qSVA(rse_tx, type = "cell_component", mod = mod, assayname = "tpm")
 dim(qsva_pcs_cc)
@@ -573,9 +586,13 @@ In the context of limma, each gene's expression level is modeled as a linear com
 
 The `lmFit()` function fits a separate linear model to each gene (or transcript, in this case), and the result (fitTx) is an object that contains the fitted model coefficients and other statistics for each gene.
 
-After fitting the model, `eBayes()` is used to compute `empirical Bayes statistics` for differential expression. The function applies a shrinkage technique to the standard errors, improving the stability of the estimates, particularly when the number of samples is small. 
+After fitting the model, `eBayes()` is used to compute `empirical Bayes statistics` for differential expression. The function applies a shrinkage technique to the standard errors, `improving the stability of the estimates`, particularly when the `number of samples is small`. 
 
 The object eBTx that results from the `eBayes()` call is a fitted model object that contains several components, including `coefficients`, `standard errors`, `t-statistics`, `p-values`, and more.
+
+<div class="alert alert-info">
+  <strong>Note:</strong> Neither `TPM` nor `CPM` should be fed into edgeR or `voom`, both expects `raw counts`, as `library sizes` are used in the `normalization process`.
+</div>
 
 The steps are the following:
 ```{r LimmaDEA}
@@ -776,6 +793,22 @@ Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
 ## Print bibliography
 PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
 ```
+
+
+# Other resources
+
+1. https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html
+
+2. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7873980/
+
+3. https://bioconductor.org/help/course-materials/2019/BSS2019/04_Practical_CoreApproachesInBioconductor.html
+
+4. https://github.com/jdblischak/dc-bioc-limma/blob/master/analysis/linear-models.Rmd
+
+5. https://carpentries-incubator.github.io/high-dimensional-stats-r/02-high-dimensional-regression/index.html
+
+6. https://mlu-explain.github.io/linear-regression/
+
 
 # Acknowledgements
 
