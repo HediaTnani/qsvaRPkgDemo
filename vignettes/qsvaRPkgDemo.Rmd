@@ -435,7 +435,8 @@ Heatmap(correlation_matrix,
         color_bar = "continuous", # type of color bar
         legend_direction = "horizontal" # direction of legend
     )
-)
+) +
+ggtitle("Correlation heatmap")
 ```
 
 The `cell_fun` function customizes the display of each cell in the heatmap by adding the correlation value as text inside the cell with a specific format and font size.
