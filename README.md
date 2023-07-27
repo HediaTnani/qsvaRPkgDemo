@@ -36,7 +36,7 @@ And the development version from
 [GitHub](https://github.com/HediaTnani/qsvaRPkgDemo) with:
 
 ``` r
-BiocManager::install("HediaTnani/qsvaRPkgDemo")
+BiocManager::install("LieberInstitute/qsvaRPkgDemo")
 ```
 
 ## Citation
