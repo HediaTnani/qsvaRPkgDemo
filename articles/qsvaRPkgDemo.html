@@ -777,6 +777,11 @@ differential expression analysis using the <code><a href="https://rdrr.io/pkg/li
 <code>limma</code> package in R.</p>
 <p>The function takes two main arguments: the matrix of expression
 values (txExprs) and the design matrix (mod_qSVA).</p>
+<div class="alert alert-info">
+<p><strong>Note:</strong> Once we have our <code>mod_qSVA</code> we can
+use for the <code>txExprs</code> an <code>rse_gene</code> instead of an
+<code>rse_tx</code>.</p>
+</div>
 <p>The design matrix specifies the linear model that you’re fitting to
 the data. In this case, mod_qSVA includes the variables of interest and
 the qSVs.</p>
@@ -1045,9 +1050,9 @@ and Henry, 2023)</li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://yihui.org/knitr/" class="external-link">"knitr"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span><span class="st">"qsvaRPkgDemo.Rmd"</span>, tangle <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Date the vignette was generated.</p>
-<pre><code><span><span class="co">#&gt; [1] "2023-07-27 16:29:11 UTC"</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] "2023-07-27 16:35:33 UTC"</span></span></code></pre>
 <p>Wallclock time spent generating the vignette.</p>
-<pre><code><span><span class="co">#&gt; Time difference of 1.633 mins</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Time difference of 1.298 mins</span></span></code></pre>
 <p><code>R</code> session information.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
@@ -1383,8 +1388,10 @@ Generation in R</em>. R package version 1.43. 2023. URL:
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h2>
 <ul>
-<li>Nicholas J. Eagles: help with the deployment of this workshop
-package and website</li>
+<li><p>Leonardo Collado-Torres : guidance and support with the
+deployment of this workshop package and website</p></li>
+<li><p>Nicholas J. Eagles: support with the deployment of this workshop
+package and website</p></li>
 </ul>
 </div>
   </div>
