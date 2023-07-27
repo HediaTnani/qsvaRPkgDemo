@@ -815,7 +815,7 @@ PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
 
 3. https://bioconductor.org/help/course-materials/2019/BSS2019/04_Practical_CoreApproachesInBioconductor.html
 
-4. https://github.com/jdblischak/dc-bioc-limma/blob/master/analysis/linear-models.Rmd
+4. https://jdblischak.github.io/dc-bioc-limma/linear-models.html
 
 5. https://carpentries-incubator.github.io/high-dimensional-stats-r/02-high-dimensional-regression/index.html
 
