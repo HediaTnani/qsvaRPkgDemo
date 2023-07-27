@@ -615,6 +615,10 @@ In this part above of the code, we are running a linear model for differential e
 
 The function takes two main arguments: the matrix of expression values (txExprs) and the design matrix (mod_qSVA). 
 
+<div class="alert alert-info">
+  <strong>Note:</strong> Once we have our `mod_qSVA` we can use for the `txExprs` an `rse_gene` instead of an `rse_tx`.
+</div>
+
 The design matrix specifies the linear model that you're fitting to the data. In this case, mod_qSVA includes the variables of interest and the qSVs.
 
 <div class="alert alert-info">
@@ -826,5 +830,7 @@ PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
 
 # Acknowledgements
 
-- Nicholas J. Eagles: help with the deployment of this workshop package and website
+- Leonardo Collado-Torres : guidance and support with the deployment of this workshop package and website
+
+- Nicholas J. Eagles: support with the deployment of this workshop package and website
 
