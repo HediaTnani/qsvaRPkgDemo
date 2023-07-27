@@ -571,9 +571,9 @@ qsva_pcs_cc <- qSVA(rse_tx, type = "cell_component", mod = mod, assayname = "tpm
 dim(qsva_pcs_cc)
 ```
 
-## Differential Expression using limma
+## Differential Expression Analysis using limma between the schizophrenia (Schizo) and neurotypical control groups (Control)
 
-Before jumping to the differential expression analysis we have to add the qSVs to our statistical model by using the `cbind()`. 
+Before jumping into the differential expression analysis we have to add the qSVs to our statistical model by using the `cbind()`. 
 
 `mod_qSVA` includes both our original model and the qSVs. The qSVs adjust for the degradation effect.
 
