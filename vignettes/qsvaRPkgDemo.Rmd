@@ -198,6 +198,8 @@ The following graphic displays the class geometry and highlights the vertical (c
 
 ![RangedSummarizedExperiment](figs/rse_object.png){width=400%}
 
+[Source](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html)
+
 ### Sample Information
 
 The sample information in `colData(rse_tx)` contains the following main variables:
